@@ -1,31 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 5.0.3
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Nov 25, 2021 at 02:57 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.2.34
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `hospital`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `accountant`
---
 
 CREATE TABLE `accountant` (
   `id` int(100) NOT NULL,
@@ -294,18 +267,18 @@ INSERT INTO `department` (`id`, `name`, `description`, `x`, `y`, `hospital_id`) 
 (23, 'Maternity departments', 'Women now have a choice of who leads their maternity care and where they give birth. Care can be led by a consultant, a GP or a midwife.\n\n', '', '', '416'),
 (24, 'Microbiology', 'The microbiology department looks at all aspects of microbiology, such as bacterial and viral infections.\n\n', '', '', '416'),
 (26, 'Nephrology', 'This department monitors and assesses patients with kidney (renal) problems.\n', '', '', '416'),
-(27, 'Neurology', 'This unit deals with disorders of the nervous system, including the brain and spinal cord. It\'s run by doctors who specialise in this area (neurologists) and their staff.\n\n', '', '', '416'),
+(27, 'Neurology', 'This unit deals with disorders of the nervous system, including the brain and spinal cord. Its run by doctors who specialise in this area (neurologists) and their staff.\n\n', '', '', '416'),
 (28, 'Nutrition and dietetics', 'Trained dieticians and nutritionists provide specialist advice on diet for hospital wards and outpatient clinics, forming part of a multidisciplinary team.\n\n', '', '', '416'),
 (32, 'Occupational therapy', 'This profession helps people who are physically or mentally impaired, including temporary disability after medical treatment. It practices in the fields of both healthcare and social care.\n\n', '', '', '416'),
 (33, 'Oncology', 'This department provides radiotherapy and a full range of chemotherapy treatments for cancerous tumours and blood disorders.\n\n', '', '', '416'),
 (34, 'Ophthalmology', 'Eye departments provide a range of ophthalmic services for adults and children,\n\n', '', '', '416'),
-(35, 'Orthopaedics', 'Orthopaedic departments treat problems that affect your musculoskeletal system. That\'s your muscles, joints, bones, ligaments, tendons and nerves.\n\n', '', '', '416'),
+(35, 'Orthopaedics', 'Orthopaedic departments treat problems that affect your musculoskeletal system. Thats your muscles, joints, bones, ligaments, tendons and nerves.\n\n', '', '', '416'),
 (36, 'Pain management clinics', 'Usually run by consultant anaesthetists, these clinics aim to help treat patients with severe long-term pain that appears resistant to normal treatments.\n', '', '', '416'),
 (38, 'Physiotherapy', 'Physiotherapists promote body healing, for example after surgery, through therapies such as exercise and manipulation.\n\n', '', '', '416'),
 (39, 'Radiotherapy', 'Radiotherapy\nRun by a combination of consultant doctors and specially trained radiotherapists, this department provides radiotherapy (X-ray) treatment for conditions such as malignant tumours and cancer.\n\n', '', '', '416'),
 (40, 'Renal unit', 'Closely linked with nephrology teams at hospitals, these units provide haemodialysis treatment for patients with kidney failure. Many of these patients are on waiting lists for a kidney transplant.\n\n', '', '', '416'),
 (41, 'Rheumatology', 'Specialist doctors called rheumatologists run the unit and are experts in the field of musculoskeletal disorders (bones, joints, ligaments, tendons, muscles and nerves).\n\n', '', '', '416'),
-(42, 'Sexual health (genitourinary medicine)', 'This department provides a free and confidential service offering:\nadvice, testing and treatment for all sexually transmitted infections (STIs)\nfamily planning care (including emergency contraception and free condoms)\npregnancy testing and advice.\nIt also provides care and support for other sexual and genital problems.\nPatients are usually able to phone the department directly for an appointment and don\'t need a referral letter from their GP.\n\n\n', '', '', '416'),
+(42, 'Sexual health (genitourinary medicine)', 'This department provides a free and confidential service offering:\nadvice, testing and treatment for all sexually transmitted infections (STIs)\nfamily planning care (including emergency contraception and free condoms)\npregnancy testing and advice.\nIt also provides care and support for other sexual and genital problems.\nPatients are usually able to phone the department directly for an appointment and dont need a referral letter from their GP.\n\n\n', '', '', '416'),
 (43, 'Urology', '<p>The urology department is run by consultant urology surgeons and their surgical teams. It investigates all areas linked to kidney and bladder-based problems.</p>\n', '', '', '416'),
 (51, 'Department Name 1', '<p>Description 1</p>\n', '', '', '416'),
 (52, 'Department Name 2', '<p>Department Name 2</p>\n', '', '', '449'),
@@ -713,7 +686,7 @@ INSERT INTO `lab` (`id`, `category`, `patient`, `doctor`, `date`, `category_name
 (2052, NULL, '160', '156', '1636326000', NULL, '<p>Ix</p>\r\n\r\n<p>  MRDT -negative</p>\r\n\r\n<p>  URINE SED -pus cells +++.epih cells +++</p>\r\n\r\n<p> </p>\r\n\r\n<p>NHIF</p>\r\n', NULL, '776', 'MARY  JACOB  MARAMBO', '0768963812', 'mubinyange', 'EDWIN KAMUGISHA', '08-11-21', '458'),
 (2053, NULL, '161', '155', '1636326000', NULL, '<p>MRDT- pos PF</p>\r\n\r\n<p>URINE- Pus cell ++</p>\r\n', NULL, '793', 'DEOGRATIUS   LADISLAUS MGANGA', '0765911842', 'mikole', 'DISHON NURU', '08-11-21', '458'),
 (2054, NULL, '153', '155', '1636326000', NULL, '<p>MRDT-negative</p>\r\n\r\n<p>*WIDAL-s.t.o 1:20 S.T.H 1;20</p>\r\n\r\n<p>URINE-MANY PUS CELLS</p>\r\n\r\n<p>STOOL-NOT DONE</p>\r\n\r\n<p> </p>\r\n\r\n<p>NHIF</p>\r\n', NULL, '776', 'NOELINA N   DOMINICK', 'none', 'murgwanza', 'DISHON NURU', '08-11-21', '458'),
-(2055, NULL, '163', '156', '1636326000', NULL, '<p>Ix</p>\r\n\r\n<p>  MRDT - Negative</p>\r\n\r\n<p>  URINE SED - Pus cells ++</p>\r\n\r\n<p>NHIF</p>\r\n', NULL, '794', 'GODRICK   NIYON\'KINGI', 'none', 'mbinyange', 'EDWIN KAMUGISHA', '08-11-21', '458'),
+(2055, NULL, '163', '156', '1636326000', NULL, '<p>Ix</p>\r\n\r\n<p>  MRDT - Negative</p>\r\n\r\n<p>  URINE SED - Pus cells ++</p>\r\n\r\n<p>NHIF</p>\r\n', NULL, '794', 'GODRICK   NIYONKINGI', 'none', 'mbinyange', 'EDWIN KAMUGISHA', '08-11-21', '458'),
 (2056, NULL, '164', '155', '1636326000', NULL, '<p>urine-PUS CELLS ++</p>\r\n\r\n<p>MRDT-NEG-</p>\r\n\r\n<p>STOOL-NAD</p>\r\n\r\n<p>RBG-4.8MMOL/L</p>\r\n\r\n<p> </p>\r\n\r\n<p>NHIF</p>\r\n', NULL, '776', 'DORICE   COLONERY  MADANDI', '0688366885', 'mbinyange', 'DISHON NURU', '08-11-21', '458'),
 (2057, NULL, '85', '156', '1636326000', NULL, '<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\">\r\n <caption>\r\n <pre>\r\nNAME:kendrick edward \r\nAGE:1/12\r\nPHONE NUMBER:</pre>\r\n </caption>\r\n <thead>\r\n  <tr>\r\n   <th scope=\"col\">                                 LABORATORY REPORT:                           </th>\r\n  </tr>\r\n </thead>\r\n <tbody>\r\n  <tr>\r\n   <td>1.mrdt- neg</td>\r\n  </tr>\r\n  <tr>\r\n   <td>2.rbg-5.7mmol/l</td>\r\n  </tr>\r\n  <tr>\r\n   <td>3.</td>\r\n  </tr>\r\n  <tr>\r\n   <td>4.</td>\r\n  </tr>\r\n  <tr>\r\n   <td>5.</td>\r\n  </tr>\r\n </tbody>\r\n</table>\r\n\r\n<p> </p>\r\n', NULL, '776', 'Maabara (Lab)', 'None', 'Huduma Dispensary', 'EDWIN KAMUGISHA', '08-11-21', '458'),
 (2058, NULL, '135', '156', '1636326000', NULL, '<p>Ix </p>\r\n\r\n<p>   MRDT - Negative</p>\r\n\r\n<p>  STOOL - NAD</p>\r\n\r\n<p>   URINE SED -Nill</p>\r\n\r\n<p>STRATEGY</p>\r\n', NULL, '794', 'jORDAN TALEMWA  MULINNDA', ' 0717795062', 'nakatunga', 'EDWIN KAMUGISHA', '08-11-21', '458'),
@@ -1389,7 +1362,7 @@ INSERT INTO `medical_history` (`id`, `patient_id`, `title`, `description`, `pati
 (142, '161', 'known PUD pt Abdominal pain 4/7, fever 4/7 body weakness 5/7', '<p>ill looking</p>\r\n\r\n<p>febrile</p>\r\n\r\n<p>not stable</p>\r\n\r\n<p>epigastric tenderness</p>\r\n\r\n<p>hypogastrium tenderness</p>\r\n', 'DEOGRATIUS   LADISLAUS MGANGA', 'mikole', '0765911842', NULL, '1636326000', NULL, '458'),
 (143, '153', 'ABD PAIN 1/7', '<p>ILL LOOKING</p>\r\n\r\n<p>ABD TENDERNESS</p>\r\n', 'NOELINA N   DOMINICK', 'murgwanza', 'none', NULL, '1636326000', NULL, '458'),
 (144, '162', 'Hx of cough and flu 2/52', '<p>O/E</p>\r\n\r\n<p>  Dry coughs and flu, fibrile</p>\r\n', 'BELINA  DANIEL  YANKANA', 'mbinyange', '0756033098', NULL, '1636326000', NULL, '458'),
-(145, '163', 'Hx of cough and flu 2/7', '<p>O/E</p>\r\n\r\n<p>Fair looking, fibrile</p>\r\n', 'GODRICK   NIYON\'KINGI', 'mbinyange', 'none', NULL, '1636326000', NULL, '458'),
+(145, '163', 'Hx of cough and flu 2/7', '<p>O/E</p>\r\n\r\n<p>Fair looking, fibrile</p>\r\n', 'GODRICK   NIYONKINGI', 'mbinyange', 'none', NULL, '1636326000', NULL, '458'),
 (146, '164', 'Known pt HTN Headache 1/7 body weakness 2/7', '<p>ill looking</p>\r\n\r\n<p>unstable</p>\r\n\r\n<p>BP- 126/86mmHg</p>\r\n', 'DORICE   COLONERY  MADANDI', 'mbinyange', '0688366885', NULL, '1636326000', NULL, '458'),
 (147, '165', 'VAGINAL DISCHARGE 2/7, FEVER ', '<p>febrile</p>\r\n\r\n<p>not stable</p>\r\n', 'LUCIA LAUIRIAN  RAPHAEL', 'nakatunga', '0784297442', NULL, '1636326000', NULL, '458'),
 (148, '166', 'left ear pain 2/7', '<p>O/E</p>\r\n\r\n<p>Fair looking</p>\r\n', 'NOVATH  BUBERWA  CHRISTOPHER', 'nakatunga', '0710778778', NULL, '1636326000', NULL, '458'),
@@ -2015,7 +1988,7 @@ INSERT INTO `medicine` (`id`, `name`, `category`, `price`, `box`, `s_price`, `qu
 (2968, 'Amoxyclin', 'Capsules', 'None', 'None', '100', 50, 'Amoxyclin', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (2969, 'Amoxycilin + Clavulanic  SYRUP', 'Tablets', 'None', 'None', '15000', 5, 'Amoxycilin + Clavulanic Acid SYRUP', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (2970, 'Amoxycilin + Clavulanic Acid 500-125', 'Caps/Tabs', 'None', 'None', '20000', 145, 'Amoxycilin + Clavulanic Acid', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
-(2971, 'Amoxyclin + clavulinc acid', 'Pack (Tablet 28\'s)', 'None', 'None', '4500', 4260, 'Amoxyclin + clavulinc acid', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
+(2971, 'Amoxyclin + clavulinc acid', 'Pack (Tablet 28s)', 'None', 'None', '4500', 4260, 'Amoxyclin + clavulinc acid', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (2972, 'Amoxyclin + Clavulinic acid Inj', 'Vial', 'None', 'None', '15000', 0, 'Amoxyclin + Clavulinic acid Inj', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (2973, 'Amoxyclln + Powder', 'Bottle', 'None', 'None', '4000', 0, 'Amoxyclln + Powder', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (2974, 'Ampicilin Inj', 'Vial', 'None', 'None', '4000', 75, 'Ampicilin + Inj', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
@@ -2121,8 +2094,8 @@ INSERT INTO `medicine` (`id`, `name`, `category`, `price`, `box`, `s_price`, `qu
 (3076, '5-Fluorouracil', 'vial /Ampule', 'None', 'None', '3300', 0, '5-Fluorouracil', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3077, '5-Fluorouracil', 'vial /Ampule', 'None', 'None', '27700', 0, '5-Fluorouracil', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3078, 'Actinomycin Dactinomycin', 'vial /Ampule', 'None', 'None', '9000', 0, 'Actinomycin Dactinomycin', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
-(3079, ' Alendronic Acid', '4\'s pack', 'None', 'None', '270000', 0, ' Alendronic Acid', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
-(3080, 'Anastrazole ®Arimidex', 'Pack (Tablet 28\'s)', 'None', 'None', '124000', 0, 'Anastrazole ®Arimidex', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
+(3079, ' Alendronic Acid', '4s pack', 'None', 'None', '270000', 0, ' Alendronic Acid', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
+(3080, 'Anastrazole ®Arimidex', 'Pack (Tablet 28s)', 'None', 'None', '124000', 0, 'Anastrazole ®Arimidex', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3081, 'Anastrazole ®Arimidex', 'vial /Ampule', 'None', 'None', '85500', 0, 'Anastrazole ®Arimidex', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3082, 'Aspraginase', 'vial /Ampule', 'None', 'None', '65000', 0, 'Aspraginase', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3083, 'Aspraginase', 'vial /Ampule', 'None', 'None', '1340000', 0, 'Aspraginase', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
@@ -2386,7 +2359,7 @@ INSERT INTO `medicine` (`id`, `name`, `category`, `price`, `box`, `s_price`, `qu
 (3341, 'Mannitol IV Solution', 'Tablets', 'None', 'None', '10000', 0, 'Mannitol IV Solution', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3342, 'Sodium Chloride IV solution (NS)', 'Bottle', 'None', 'None', '3000', 0, 'Sodium Chloride IV solution (NS)', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3343, 'Sodium Chloride + Dextrose IV solution (DNS)', 'Bottle', 'None', 'None', '3000', 207, 'Sodium Chloride + Dextrose IV solution (DNS)', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
-(3344, 'Sodium Lactrate Compound IV solution (Hartman\'s Ringers Lactate', 'Tablets', 'None', 'None', '3000', 193, 'Sodium Lactrate Compound IV solution (Hartman\'s Ringers Lactate', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
+(3344, 'Sodium Lactrate Compound IV solution (Hartmans Ringers Lactate', 'Tablets', 'None', 'None', '3000', 193, 'Sodium Lactrate Compound IV solution (Hartmans Ringers Lactate', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3345, 'Water for injection', 'Tablets', 'None', 'None', '300', 0, 'Water for injection', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3346, 'Multivitamin SYR', 'Bottle', 'None', 'None', '3000', 28, 'Multivitamin', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
 (3347, 'Multivitamin Tabs', 'Tablets', 'None', 'None', '400', 1419, 'Multivitamin', 'None', 'Active', '01-10-2024', '10/26/21', '458'),
@@ -2410,10 +2383,10 @@ INSERT INTO `medicine` (`id`, `name`, `category`, `price`, `box`, `s_price`, `qu
 (3365, 'GOODMORNING SYRUP', 'Bottle', 'None', 'None', '3000', 124, 'GOODMORNING SYRUP', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
 (3366, 'ARTESUNATE INJ 60MG-6ML', 'Vial', 'None', 'None', '7000', 206, 'ARTESUNATE INJ', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
 (3367, 'ASCOBIC ACID TABS', 'Tablets', 'None', 'None', '100', 970, 'ASCOBIC ACID TABS', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
-(3368, 'AZITHROMYCIN 250MG', '4\'s pack', 'None', 'None', '5000', 353, 'AZITHROMYCIN 250MG', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
+(3368, 'AZITHROMYCIN 250MG', '4s pack', 'None', 'None', '5000', 353, 'AZITHROMYCIN 250MG', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
 (3369, 'AZITHROMYCIN SYRUP', 'Bottle', 'None', 'None', '5000', 20, 'AZITHROMYCIN SYRUP', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
 (3370, 'MRDT', 'Caps/Tabs', 'None', 'None', '2000', 67, 'MRDT', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
-(3371, 'ENO', 'Pack (Tablet 28\'s)', 'None', 'None', '500', 60, 'ENO', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
+(3371, 'ENO', 'Pack (Tablet 28s)', 'None', 'None', '500', 60, 'ENO', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
 (3372, 'MEFENAMIC ACID', 'Capsules', 'None', 'None', '0', 300, 'MEFENAMIC ACID', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
 (3373, 'PEADIATRIC NASAL DROP', 'Bottle', 'None', 'None', '3000', 12, 'PEADIATRIC NASAL DROP', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
 (3374, 'BORIC ACID SOLUTION', 'Bottle', 'None', 'None', '3000', 38, 'BORIC ACID SOLUTION', 'None', 'Active', '01-10-2024', '11/06/21', '458'),
@@ -2437,12 +2410,12 @@ INSERT INTO `medicine` (`id`, `name`, `category`, `price`, `box`, `s_price`, `qu
 (3392, 'DEXTROSE IV SOLUTION 5%ML', 'Bottle', 'NONE', 'NONE', '3000', 130, 'DEXTROSE IV SOLUTION', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3393, 'DICLOFENAC GEL-CREAM', 'Tube', 'NONE', 'NONE', '3000', 183, 'DICLOFENAC', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3394, 'DICLOFENAC INJ', 'ampule', 'NONE', 'NONE', '3000', 660, 'DICLOFENAC INJ', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
-(3395, 'DIHYDROARTEMISINN(DUO-COTEXIN)', 'Pack (Tablet 28\'s)', 'NONE', 'NONE', '15000', 9, 'DIHYDROARTEMISINN(DUO-COTEXIN)', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
+(3395, 'DIHYDROARTEMISINN(DUO-COTEXIN)', 'Pack (Tablet 28s)', 'NONE', 'NONE', '15000', 9, 'DIHYDROARTEMISINN(DUO-COTEXIN)', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3396, 'ERYTHROMYCINE250mgS', 'Tablets', 'NONE', 'NONE', '150', 18267, 'ERYTHROMYCINE', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3397, 'BLOOD LANCET', 'BOX', 'NONE', 'NONE', '7000', 1300, 'BLOOD LANCET', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3398, 'ERYTHROMYCINE SYRUP', 'Bottle', 'NONE', 'NONE', '3000', 86, 'ERYTHROMYCINE', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3399, 'Gentamicin EYE DROP', 'Bottle', 'NONE', 'NONE', '3000', 0, 'Gentamicin EYE DROP', 'NONE', 'ACTIVE', '01-11-2024', '11/06/21', '458'),
-(3400, 'GLUCOSE PKT', '4\'s pack', 'NONE', 'NONE', '1000', 5, 'GLUCOSE PKT', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
+(3400, 'GLUCOSE PKT', '4s pack', 'NONE', 'NONE', '1000', 5, 'GLUCOSE PKT', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3402, 'HYDROGEN PEROXIDE 6% BTL', 'Bottle', 'NONE', 'NONE', '2000', 30, 'HYDROGEN PEROXIDE', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3401, 'HYDROCOTISONE INJ 100MG', 'vial /Ampule', 'NONE', 'NONE', '4000', 212, 'HYDROCOTISONE INJ', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
 (3403, 'HB STRIPS', 'BOX', 'NONE', 'NONE', '45000', 3, 'HB STRIPS', 'NONE', 'ACTIVE', '01-10-2024', '11/06/21', '458'),
@@ -2525,8 +2498,8 @@ INSERT INTO `medicine_category` (`id`, `category`, `description`, `hospital_id`)
 (25, 'ampule', 'ampule', '458'),
 (26, 'Pessaries', 'Pessaries', '458'),
 (27, 'vial /Ampule', 'vial /Ampule', '458'),
-(28, '4\'s pack', '4\'s pack', '458'),
-(29, 'Pack (Tablet 28\'s)', 'Pack (Tablet 28\'s)', '458'),
+(28, '4s pack', '4s pack', '458'),
+(29, 'Pack (Tablet 28s)', 'Pack (Tablet 28s)', '458'),
 (30, 'Paint', 'Paint', '458'),
 (31, ' Suppository', ' Suppository', '458'),
 (32, 'Cream / Lotion', 'Cream / Lotion', '458'),
@@ -2747,7 +2720,7 @@ INSERT INTO `patient` (`id`, `img_url`, `name`, `email`, `doctor`, `address`, `p
 (160, NULL, 'MARY  JACOB  MARAMBO', 'mary2@hms.com', '156', 'mubinyange', '0768963812', 'Female', '22-06-1994', NULL, 'A+', '903', '271632', '11/08/21', '1636375246', NULL, '458'),
 (161, NULL, 'DEOGRATIUS   LADISLAUS MGANGA', 'radislaus@hms.com', '155', 'mikole', '0765911842', 'Male', '24-04-1991', NULL, 'A+', '904', '618273', '11/08/21', '1636375570', NULL, '458'),
 (162, NULL, 'BELINA  DANIEL  YANKANA', 'belina@hms.com', '156', 'mbinyange', '0756033098', 'Female', '09-05-1987', NULL, 'A+', '905', '581756', '11/08/21', '1636376955', NULL, '458'),
-(163, NULL, 'GODRICK   NIYON\'KINGI', 'godrick@hms.com', '156', 'mbinyange', 'none', 'Male', '06-11-2017', NULL, 'A+', '906', '434092', '11/08/21', '1636377173', NULL, '458'),
+(163, NULL, 'GODRICK   NIYONKINGI', 'godrick@hms.com', '156', 'mbinyange', 'none', 'Male', '06-11-2017', NULL, 'A+', '906', '434092', '11/08/21', '1636377173', NULL, '458'),
 (164, NULL, 'DORICE   COLONERY  MADANDI', 'dorice1@hms.com', '155', 'mbinyange', '0688366885', 'Female', '15-05-1975', NULL, 'A+', '907', '780919', '11/08/21', '1636377648', NULL, '458'),
 (165, NULL, 'LUCIA LAUIRIAN  RAPHAEL', 'lucia@hms.com', '155', 'nakatunga', '0784297442', 'Female', '02-05-1998', NULL, 'A+', '908', '310149', '11/08/21', '1636379541', NULL, '458'),
 (166, NULL, 'NOVATH  BUBERWA  CHRISTOPHER', 'novath@hms.com', '156', 'nakatunga', '0710778778', 'Male', '11-09-1986', NULL, 'A+', '909', '547324', '11/08/21', '1636380609', NULL, '458'),
@@ -3951,7 +3924,7 @@ INSERT INTO `payment` (`id`, `category`, `patient`, `doctor`, `date`, `amount`, 
 (2167, NULL, '161', '155', '1636375594', '0', '0', NULL, NULL, '0', '0', '0', 'NHIF', '0', '0', NULL, '151*0*others*1', NULL, NULL, 'unpaid', '775', 'DEOGRATIUS   LADISLAUS MGANGA', '0765911842', 'mikole', 'DISHON NURU', '08-11-21', '458'),
 (2168, NULL, '85', '', '1636376189', '4000', '0', NULL, NULL, '0', '0', '4000', '', '4000', '0', NULL, '133*2000*diagnostic*1,158*2000*diagnostic*1', '4000', 'Cash', 'unpaid', '775', 'Maabara (Lab)', 'None', 'Huduma Dispensary', '0', '08-11-21', '458'),
 (2169, NULL, '162', '156', '1636377007', '0', '0', NULL, NULL, '0', '0', '0', 'NHIF', '0', '0', NULL, '151*0*others*1', NULL, NULL, 'unpaid', '775', 'BELINA  DANIEL  YANKANA', '0756033098', 'mbinyange', 'EDWIN KAMUGISHA', '08-11-21', '458'),
-(2170, NULL, '163', '156', '1636377211', '0', '0', NULL, NULL, '0', '0', '0', 'NHIF', '0', '0', NULL, '151*0*others*1', NULL, NULL, 'unpaid', '775', 'GODRICK   NIYON\'KINGI', 'none', 'mbinyange', 'EDWIN KAMUGISHA', '08-11-21', '458'),
+(2170, NULL, '163', '156', '1636377211', '0', '0', NULL, NULL, '0', '0', '0', 'NHIF', '0', '0', NULL, '151*0*others*1', NULL, NULL, 'unpaid', '775', 'GODRICK   NIYONKINGI', 'none', 'mbinyange', 'EDWIN KAMUGISHA', '08-11-21', '458'),
 (2171, NULL, '164', '155', '1636377691', '0', '0', NULL, NULL, '0', '0', '0', 'NHIF', '0', '0', NULL, '151*0*others*1', NULL, NULL, 'unpaid', '775', 'DORICE   COLONERY  MADANDI', '0688366885', 'mbinyange', 'DISHON NURU', '08-11-21', '458'),
 (2172, NULL, '85', '', '1636379291', '5000', '0', NULL, NULL, '0', '0', '5000', 'Maabara', '5000', '0', NULL, '133*2000*diagnostic*1,157*3000*diagnostic*1', '5000', 'Cash', 'unpaid', '775', 'Maabara (Lab)', 'None', 'Huduma Dispensary', '0', '08-11-21', '458'),
 (2173, NULL, '165', '155', '1636379566', '2000', '0', NULL, NULL, '0', '0', '2000', 'Paid', '2000', '0', NULL, '136*2000*others*1', '2000', 'Cash', 'unpaid', '775', 'LUCIA LAUIRIAN  RAPHAEL', '0784297442', 'nakatunga', 'DISHON NURU', '08-11-21', '458'),
@@ -7497,7 +7470,7 @@ INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`
 (903, '192.168.1.109', 'MARY  JACOB  MARAMBO', '$2y$08$BGyYxt8LVB3kwa/J25BJ/.kXs22OyyeZYhsRVj3.68nyR8jOFFCFy', NULL, 'mary2@hms.com', NULL, NULL, NULL, NULL, 1636375246, NULL, 1, NULL, NULL, NULL, NULL, '761'),
 (904, '192.168.1.109', 'DEOGRATIUS   LADISLAUS MGANGA', '$2y$08$Z3EFZoJW42jJYlAKpTEnr.2.167P.qBC55vlRzbUxihptzYBkj9QG', NULL, 'radislaus@hms.com', NULL, NULL, NULL, NULL, 1636375570, NULL, 1, NULL, NULL, NULL, NULL, '761'),
 (905, '192.168.1.109', 'BELINA  DANIEL  YANKANA', '$2y$08$P9wLhq8QfKqccqx.yl5uDeoUtmoipV6.1Hg8b9MzjBARNQI8fUhGy', NULL, 'belina@hms.com', NULL, NULL, NULL, NULL, 1636376955, NULL, 1, NULL, NULL, NULL, NULL, '761'),
-(906, '192.168.1.109', 'GODRICK   NIYON\'KINGI', '$2y$08$XEyA8S1eBiia5s6utmot2Oya4Y2L7GZ6a9bpmpVTTaCq0T1q17YTK', NULL, 'godrick@hms.com', NULL, NULL, NULL, NULL, 1636377173, NULL, 1, NULL, NULL, NULL, NULL, '761'),
+(906, '192.168.1.109', 'GODRICK   NIYONKINGI', '$2y$08$XEyA8S1eBiia5s6utmot2Oya4Y2L7GZ6a9bpmpVTTaCq0T1q17YTK', NULL, 'godrick@hms.com', NULL, NULL, NULL, NULL, 1636377173, NULL, 1, NULL, NULL, NULL, NULL, '761'),
 (907, '192.168.1.109', 'DORICE   COLONERY  MADANDI', '$2y$08$GGZePDHTRbT0vYCjXdPBZ.BWAC1A2fN8hAZuj7jx16pBVCH8LZkuO', NULL, 'dorice1@hms.com', NULL, NULL, NULL, NULL, 1636377648, NULL, 1, NULL, NULL, NULL, NULL, '761'),
 (908, '192.168.1.109', 'LUCIA LAUIRIAN  RAPHAEL', '$2y$08$24oiead3houL9.EZ7QUVu.UWw1rdNdfd8TIgo38QwqoQRYz7Zn7VG', NULL, 'lucia@hms.com', NULL, NULL, NULL, NULL, 1636379541, NULL, 1, NULL, NULL, NULL, NULL, '761'),
 (909, '192.168.1.109', 'NOVATH  BUBERWA  CHRISTOPHER', '$2y$08$j10ufWuIiI7PV.5f75jA.eWlXi5ybaXC8YijsndbpnuK50abuIeSK', NULL, 'novath@hms.com', NULL, NULL, NULL, NULL, 1636380609, NULL, 1, NULL, NULL, NULL, NULL, '761'),
@@ -9304,8 +9277,3 @@ ALTER TABLE `website_settings`
 ALTER TABLE `users_groups`
   ADD CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
