@@ -10,56 +10,56 @@ class pgateway_model extends CI_model {
         $this->load->database();
     }
 
-    function getPaymentGatewaySettingsById($id) {
+    function getpaymentgatewaySettingsById($id) {
         $this->db->where('hospital_id', $this->session->userdata('hospital_id'));
         $this->db->where('id', $id);
-        $query = $this->db->get('paymentGateway');
+        $query = $this->db->get('paymentgateway');
         return $query->row();
     }
 
-    function getPaymentGatewaySettingsByName($name) {
+    function getpaymentgatewaySettingsByName($name) {
         $this->db->where('hospital_id', $this->session->userdata('hospital_id'));
         $this->db->where('name', $name);
-        $query = $this->db->get('paymentGateway');
+        $query = $this->db->get('paymentgateway');
         return $query->row();
     }
 
-    function getPaymentGatewayByUser($user) {
+    function getpaymentgatewayByUser($user) {
         $this->db->where('hospital_id', $this->session->userdata('hospital_id'));
         $this->db->order_by('id', 'desc');
         $this->db->where('user', $user);
-        $query = $this->db->get('paymentGateway');
+        $query = $this->db->get('paymentgateway');
         return $query->result();
     }
 
-    function getPaymentGatewaySettings() {
+    function getpaymentgatewaySettings() {
         $this->db->where('hospital_id', $this->session->userdata('hospital_id'));
-        $query = $this->db->get('paymentGateway');
+        $query = $this->db->get('paymentgateway');
         return $query->row();
     }
 
-    function updatePaymentGatewaySettings($id, $data) {
+    function updatepaymentgatewaySettings($id, $data) {
         $this->db->where('id', $id);
-        $this->db->update('paymentGateway', $data);
+        $this->db->update('paymentgateway', $data);
     }
 
-    function addPaymentGatewaySettings($data) {   
-        $this->db->insert('paymentGateway', $data);
+    function addpaymentgatewaySettings($data) {   
+        $this->db->insert('paymentgateway', $data);
     }
 
     function delete($id) {
         $this->db->where('id', $id);
-        $this->db->delete('paymentGateway');
+        $this->db->delete('paymentgateway');
     }
 
-    function insertPaymentGateway($data) {
-        $this->db->insert('paymentGateway', $data);
+    function insertpaymentgateway($data) {
+        $this->db->insert('paymentgateway', $data);
     }
 
-    function getPaymentGateway() {
+    function getpaymentgateway() {
         $this->db->where('hospital_id', $this->session->userdata('hospital_id'));
         $this->db->order_by('id', 'desc');
-        $query = $this->db->get('paymentGateway');
+        $query = $this->db->get('paymentgateway');
         return $query->result();
     }
 

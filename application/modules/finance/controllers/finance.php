@@ -14,6 +14,8 @@ class Finance extends MX_Controller {
         $this->load->model('accountant/accountant_model');
         $this->load->model('receptionist/receptionist_model');
         $this->load->module('paypal');
+        $this->load->library('session');
+
 
         if (!$this->ion_auth->logged_in()) {
             redirect('auth/login', 'refresh');
@@ -23,7 +25,82 @@ class Finance extends MX_Controller {
             redirect('home/permission');
         }
     }
+    // nhif service token
+    public function getAuthenticationHeader($username, $password)
+    { 
+        // Construct the body for the STS request
+        $authenticationRequestBody = 
+        "grant_type=password&username=".$username."&password=".$password; 
 
+        //Using curl to post the information to STS and get back the authentication response 
+        $ch = curl_init();
+        // set url 
+        curl_setopt($ch, CURLOPT_URL, SERVICE_TOKEN); 
+        // Get the response back as a string 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+        // Mark as Post request
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        // Set the parameters for the request
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $authenticationRequestBody);
+        // By default, HTTPS does not work with curl.
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // read the output from the post request
+        $output = curl_exec($ch); 
+        // close curl resource to free up system resources
+        curl_close($ch); 
+        // decode the response from sts using json decoder
+        $tokenOutput = json_decode($output);
+        // exit;
+        // return $tokenOutput->{'access_token'};
+        if(empty($tokenOutput)){
+            $this->session->set_flashdata('error', "Error!! Check Internet your Connection");
+            redirect($_SERVER['HTTP_REFERER']);
+            ?>
+            <!-- <script>alert('Error!! Check Internet your Connection')</script> -->
+            <?php
+           
+        }else{
+        return $tokenOutput->{'access_token'};
+        }
+    }
+     // claim server token
+    public function getAuthenticationHeaderClaimServer($username, $password)
+    { 
+        // Construct the body for the STS request
+        $authenticationRequestBody = 
+        "grant_type=password&username=".$username."&password=".$password; 
+
+        //Using curl to post the information to STS and get back the authentication response 
+        $ch = curl_init();
+        // set url 
+        curl_setopt($ch, CURLOPT_URL, CLAIM_TOKEN); 
+        // Get the response back as a string 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+        // Mark as Post request
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        // Set the parameters for the request
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $authenticationRequestBody);
+        // By default, HTTPS does not work with curl.
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // read the output from the post request
+        $output = curl_exec($ch); 
+        // close curl resource to free up system resources
+        curl_close($ch); 
+        // decode the response from sts using json decoder
+        $tokenOutput = json_decode($output);
+        // exit;
+        // return $tokenOutput->{'access_token'};s
+        if(empty($tokenOutput)){
+            $this->session->set_flashdata('error', "Error!! Check Internet your Connection");
+            redirect($_SERVER['HTTP_REFERER']);
+            ?>
+            <!-- <script>alert('Error!! Check Internet your Connection')</script> -->
+            <?php
+           
+        }else{
+        return $tokenOutput->{'access_token'};
+        }
+    }
     public function index() {
 
         redirect('finance/financial_report');
@@ -65,7 +142,7 @@ class Finance extends MX_Controller {
         $this->load->view('home/footer'); // just the header file
     }
 
-    public function addPayment() {
+        public function addPayment() {
         $id = $this->input->post('id');
         $item_selected = array();
         $quantity = array();
@@ -128,6 +205,9 @@ class Finance extends MX_Controller {
             $password = $d_name . '-' . rand(1, 100000000);
         }
         $d_phone = $this->input->post('d_phone');
+        $nhif_benefit = $this->input->post('nhif_benefit');
+        $card_no = $this->input->post('card_no');
+
 
         $doctor = $this->input->post('doctor');
         $date = time();
@@ -169,7 +249,9 @@ class Finance extends MX_Controller {
                     'sex' => $p_gender,
                     'age' => $p_age,
                     'add_date' => $add_date,
-                    'how_added' => 'from_pos'
+                    'how_added' => 'from_pos',
+                    'nhif_benefit' => $nhif_benefit,
+                    'card_no' => $card_no,
                 );
                 $username = $this->input->post('p_name');
 // Adding New Patient
@@ -1614,27 +1696,928 @@ class Finance extends MX_Controller {
 
         echo json_encode($output);
     }
-    // NHIF card verification
-    public function getCardNumber()
+  // NHIF functions
+    public function cardDetails()
     {
-        // $data = array();
-        // if (isset($CardNo)) {
-            $CardNo=$this->input->post('CardNo');
-            echo $CardNo;
-            // $data['cardNumber']=$CardNo;
-        // }       
+       $data['data'] ='';
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('carddetail', $data);
+        $this->load->view('home/footer'); // just the header file
+    }
+    public function getCardNumber()
+    { 
         
-        // $data['discount_type'] = $this->finance_model->getDiscountType();
-        // $data['settings'] = $this->settings_model->getSettings();
-        // $data['categories'] = $this->finance_model->getPaymentCategory();
-        // $data['patients'] = $this->patient_model->getPatient();
-        // $data['doctors'] = $this->doctor_model->getDoctor();
-        // $this->load->view('home/dashboard'); // just the header file
-        // $this->load->view('add_payment_view', $data);
-        // $this->load->view('home/footer'); // just the header file
+        $cardNo=$this->input->post('cardNo');
+        if ($cardNo == '') {
+           return redirect('finance/cardDetails');
+        } else{
+        $username = USERNAME;
+        $password = PASSWORD;
+        // echo $authotization_remark;
+        $token = $this->getAuthenticationHeader($username, $password);
+        // $cardNo = '01-11424549';
+        
+        $url = CARD_DETAIL_URL.'CardNo='.$cardNo;
+
+        
+        $headers = array(
+            'Authorization: Bearer '.$token,
+        );
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
+       
+        curl_close($ch);
+        $data = array('data'=>$response);
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('carddetail', $data);
+        $this->load->view('home/footer'); // just the header file
+    }
     }
 
+    public function verifyCard()
+    {
+
+			// $cardNo=$this->input->get('CardNo');
+			$visittype =$this->input->post('visitType');
+			$username = USERNAME;
+			$password = PASSWORD;
+			$token = $this->getAuthenticationHeader($username, $password);
+			$cardNo  =$this->input->post('verifiedcard');
+            $referal_no = $this->input->post('referal_no');
+            $authorization_remark = '';
+           
+			$url =AUTHORIZE_CARD_URL.'CardNo='.$cardNo.'&VisitTypeID='.$visittype.'&ReferralNo='.$referal_no.'&Remarks='.$authorization_remark;
+			$headers = array(
+				'Authorization: Bearer '.$token,
+			);
+			
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			
+			$response = curl_exec($ch);
+			curl_close($ch);
+            $data = array('data'=>$response);
+            $outputdata = json_decode($response);
+            if(gettype($outputdata) != 'NULL'){
+            $authorization_data= [
+                'type'=> $outputdata->{'$type'},
+                'AuthorizationID' =>$outputdata->{'AuthorizationID'},
+                'CardNo'  =>$outputdata->{'CardNo'},
+                'MembershipNo' =>$outputdata->{'MembershipNo'},
+                'EmployerNo'  =>$outputdata->{'EmployerNo'},
+                'EmployerName'   =>$outputdata->{'EmployerName'},
+                'HasSupplementary'   =>$outputdata->{'HasSupplementary'},
+                'SchemeID'  =>$outputdata->{'SchemeID'},
+                'SchemeName'   =>$outputdata->{'SchemeName'},
+                'CardExistence'   =>$outputdata->{'CardExistence'},
+                'CardStatusID'  =>$outputdata->{'CardStatusID'},
+                'CardStatus'   =>$outputdata->{'CardStatus'},
+                'IsValidCard'   =>$outputdata->{'IsValidCard'},
+                'IsActive'   =>$outputdata->{'IsActive'},
+                'StatusDescription'   =>$outputdata->{'StatusDescription'},
+                'FirstName'   =>$outputdata->{'FirstName'},
+                'MiddleName'   =>$outputdata->{'MiddleName'},
+                'LastName'   =>$outputdata->{'LastName'},
+                'FullName'   =>$outputdata->{'FullName'},
+                'Gender'   =>$outputdata->{'Gender'},
+                'PFNumber'   =>$outputdata->{'PFNumber'},
+                'DateOfBirth'   =>$outputdata->{'DateOfBirth'},
+                'YearOfBirth'  =>$outputdata->{'YearOfBirth'},
+                'Age'  =>$outputdata->{'Age'},
+                'ExpiryDate'   =>$outputdata->{'ExpiryDate'},
+                'CHNationalID'  =>$outputdata->{'CHNationalID'},
+                'AuthorizationStatus'   =>$outputdata->{'AuthorizationStatus'},
+                'AuthorizationNo'  =>$outputdata->{'AuthorizationNo'},
+                'Remarks'   =>$outputdata->{'Remarks'},
+                'FacilityCode'  =>$outputdata->{'FacilityCode'},
+                'ProductName'   =>$outputdata->{'ProductName'},
+                'ProductCode'   =>$outputdata->{'ProductCode'},
+                'CreatedBy'   =>$outputdata->{'CreatedBy'},
+                'AuthorizationDate'   =>$outputdata->{'AuthorizationDate'},
+                'DateCreated'   =>$outputdata->{'DateCreated'},
+                'LastModifiedBy'   =>$outputdata->{'LastModifiedBy'},
+                'LastModified'   =>$outputdata->{'LastModified'},
+                'AuthorizationDateSerial' =>$outputdata->{'AuthorizationDateSerial'},
+              ];
+              if($outputdata->{'AuthorizationNo'} != NULL){
+                  $this->finance_model->save_authorization_data($authorization_data);
+                }
+            }
+              
+            $this->load->view('home/dashboard'); // just the header file
+            $this->load->view('carddetail', $data);
+            $this->load->view('home/footer'); // just the header file
+    }
+    
+   
+    function getPatientNhifStatus() {
+        $id = $this->input->get('id');
+        $data = $this->finance_model->getPatientNhifStatus($id);
+        echo json_encode($data);
+    }
+    public function authorizeCard(){
+        $data['data'] ='';
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('authorize_card', $data);
+        $this->load->view('home/footer'); // just the header file
+    }
+    public function authorize()
+    {
+
+			// $cardNo=$this->input->get('CardNo');
+			$visittype =$this->input->post('visitType');
+			$username = USERNAME;
+			$password = PASSWORD;
+			$token = $this->getAuthenticationHeader($username, $password);
+            
+			$cardNo  =$this->input->post('cardNo');
+            $referal_no = $this->input->post('referal_no');
+            $authorization_remark = $this->input->post('Remarks');
+
+			// $url = 'https://verification.nhif.or.tz/nhifservice/breeze/verification/GetCardDetails?CardNo='.$cardNo;
+			$url =AUTHORIZE_CARD_URL.'CardNo='.$cardNo.'&VisitTypeID='.$visittype.'&ReferralNo='.$referal_no.'&Remarks='.$authorization_remark;
+			$headers = array(
+				'Authorization: Bearer '.$token,
+			);
+			
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			
+			$response = curl_exec($ch);
+			curl_close($ch);
+            $outputdata = json_decode($response);
+            if(gettype($outputdata) != 'NULL'){
+            $authorization_data= [
+                'type'=> $outputdata->{'$type'},
+                'AuthorizationID' =>$outputdata->{'AuthorizationID'},
+                'CardNo'  =>$outputdata->{'CardNo'},
+                'MembershipNo' =>$outputdata->{'MembershipNo'},
+                'EmployerNo'  =>$outputdata->{'EmployerNo'},
+                'EmployerName'   =>$outputdata->{'EmployerName'},
+                'HasSupplementary'   =>$outputdata->{'HasSupplementary'},
+                'SchemeID'  =>$outputdata->{'SchemeID'},
+                'SchemeName'   =>$outputdata->{'SchemeName'},
+                'CardExistence'   =>$outputdata->{'CardExistence'},
+                'CardStatusID'  =>$outputdata->{'CardStatusID'},
+                'CardStatus'   =>$outputdata->{'CardStatus'},
+                'IsValidCard'   =>$outputdata->{'IsValidCard'},
+                'IsActive'   =>$outputdata->{'IsActive'},
+                'StatusDescription'   =>$outputdata->{'StatusDescription'},
+                'FirstName'   =>$outputdata->{'FirstName'},
+                'MiddleName'   =>$outputdata->{'MiddleName'},
+                'LastName'   =>$outputdata->{'LastName'},
+                'FullName'   =>$outputdata->{'FullName'},
+                'Gender'   =>$outputdata->{'Gender'},
+                'PFNumber'   =>$outputdata->{'PFNumber'},
+                'DateOfBirth'   =>$outputdata->{'DateOfBirth'},
+                'YearOfBirth'  =>$outputdata->{'YearOfBirth'},
+                'Age'  =>$outputdata->{'Age'},
+                'ExpiryDate'   =>$outputdata->{'ExpiryDate'},
+                'CHNationalID'  =>$outputdata->{'CHNationalID'},
+                'AuthorizationStatus'   =>$outputdata->{'AuthorizationStatus'},
+                'AuthorizationNo'  =>$outputdata->{'AuthorizationNo'},
+                'Remarks'   =>$outputdata->{'Remarks'},
+                'FacilityCode'  =>$outputdata->{'FacilityCode'},
+                'ProductName'   =>$outputdata->{'ProductName'},
+                'ProductCode'   =>$outputdata->{'ProductCode'},
+                'CreatedBy'   =>$outputdata->{'CreatedBy'},
+                'AuthorizationDate'   =>$outputdata->{'AuthorizationDate'},
+                'DateCreated'   =>$outputdata->{'DateCreated'},
+                'LastModifiedBy'   =>$outputdata->{'LastModifiedBy'},
+                'LastModified'   =>$outputdata->{'LastModified'},
+                'AuthorizationDateSerial' =>$outputdata->{'AuthorizationDateSerial'},
+              ];
+              if($outputdata->{'AuthorizationNo'} != NULL){
+                $this->finance_model->save_authorization_data($authorization_data);
+              }
+            }
+            $data = array('data'=>$response);
+            $this->load->view('home/dashboard'); // just the header file
+            $this->load->view('authorize_card', $data);
+            $this->load->view('home/footer'); // just the header file
+            //  else{
+
+            // }
+    }
+    public function Download(){
+        $data['services'] =$this->finance_model->getSerives();
+        $data['pricePackage'] = $this->finance_model->getPackages();
+        $data['download_message'] ='';
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('nhif_tariffs', $data);
+        $this->load->view('home/footer'); // just the header file
+    }
+    public function pricePackage(){
+        $username = USERNAME;
+        $password = PASSWORD;
+        $token = $this->getAuthenticationHeaderClaimServer($username, $password);
+        
+        $facility_code = FACILITY_CODE;
+        $url =PRICE_PACKAGE_URL.'FacilityCode='.$facility_code;
+        $headers = array(
+            'Authorization: Bearer '.$token,
+        );
+    
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
+        curl_close($ch);
+        if(!empty($response)){
+            $data = array('data'=>$response);
+        
+            $dataArray = json_decode($response);
+            // drop existing packages then insert insert new
+            $this->finance_model->dropExistingPackages();
+            //insert each item in a database
+           
+            foreach ($dataArray->PricePackage as $item)
+			{
+				// Add the object to the batch array
+				$pricePackage[] = array(
+					'ItemCode' => $item->ItemCode,
+					'PriceCode' => $item->PriceCode,
+					'LevelPriceCode' => $item->LevelPriceCode,
+					'OldItemCode' => $item->OldItemCode,
+					'ItemTypeID' => $item->ItemTypeID,
+					'ItemName' => $item->ItemName,
+					'Strength' => $item->Strength,
+					'Dosage' => $item->Dosage,
+					'PackageID' => $item->PackageID,
+					'SchemeID' => $item->SchemeID,
+					'FacilityLevelCode' => $item->FacilityLevelCode,
+					'UnitPrice' => $item->UnitPrice,
+					'IsRestricted' => $item->IsRestricted,
+					'MaximumQuantity' => $item->MaximumQuantity,
+					'AvailableInLevels' => $item->AvailableInLevels,
+					'PractitionerQualifications' => $item->PractitionerQualifications,
+					'IsActive' => $item->IsActive
+				);
+			}
+            $this->finance_model->PricePackage($pricePackage);         
+            $this->session->set_flashdata('success', "Success!! Price Packages donwloaded successfully");
+            redirect($_SERVER['HTTP_REFERER']); 
+        }
+        else{
+          
+            $this->session->set_flashdata('error', "Error!! Download Failed");
+            redirect($_SERVER['HTTP_REFERER']);  
+        }          
+    }
+    public function excludedServices(){
+        $username = USERNAME;
+        $password = PASSWORD;
+        $token = $this->getAuthenticationHeaderClaimServer($username, $password);
+        
+        $facility_code = FACILITY_CODE;
+        $url =PRICE_PACKAGE_URL.'FacilityCode='.$facility_code;
+        $headers = array(
+            'Authorization: Bearer '.$token,
+        );
+    
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
+        curl_close($ch);
+        if(!empty($response)){
+            $data = array('data'=>$response);
+        
+            $dataArray = json_decode($response);
+            $services = $dataArray->ExcludedServices;   
+            echo "<pre>";
+            // print_r($services);
+            // exit;
+            // drop existing packages then insert insert new      
+            $this->finance_model->dropExistingServices();
+            foreach ($services as $item) { 
+            $excludedServices[] = array(
+                'ItemCode'=>$item->ItemCode, 
+                'SchemeID'=>$item->SchemeID,
+                'SchemeName'=>$item->SchemeName,
+                'ExcludedForProducts'=> $item->ExcludedForProducts,
+            );       
+            }
+            $this->finance_model->excludedServices($excludedServices);          
+            $this->session->set_flashdata('success', "Success!! Excluded Services donwloaded successfully");
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+        else{
+            $this->session->set_flashdata('error', "Error!! Download Failed");
+            redirect($_SERVER['HTTP_REFERER']);
+        }          
+    }
+    function Referer(){
+        $data['qualifications'] = $this->db->get('physician_qualification')->result();
+        $data['facilities'] = $this->db->get('health_facilities')->result();
+        $data['doctors'] = $this->db->get('doctor')->result();
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('refer_patient', $data);
+        $this->load->view('home/footer'); // just the header file 
+    }
+    function Claim(){
+        $data['doctors'] = $this->db->get('doctor')->result();
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('claim_submission', $data);
+        $this->load->view('home/footer'); // just the header file 
+    }
+    function seachByAthorizationNumber(){
+        $authorizationNUmber = (int)$this->input->get('authorizationNo'); 
+        $data = $this->finance_model->seachByAthorizationNumber($authorizationNUmber);
+        echo json_encode($data);
+    }
+    function seachAdmittedPatient(){
+        $card_number = (int)$this->input->get('card_number'); 
+        $data = $this->finance_model->seachAdmittedPatient($card_number);
+        echo json_encode($data);
+    }
+
+    
+    function sendReferal(){
+        // get form data
+        $cardNo=$this->input->post('cardNo');
+        $authorizationNo = $this->input->post('authorizationNo');
+        $patientFullName = $this->input->post('patientFullName');
+        $physicianMobileNo = $this->input->post('physicianMobileNo');
+        $gender = $this->input->post('gender');
+        $physicianName = $this->input->post('physicianName');
+        $physicianQualificationID = $this->input->post('physicianQualificationID');
+        $serviceIssuingFacilityCode = $this->input->post('serviceIssuingFacilityCode');
+        $referringDiagnosis = $this->input->post('referringDiagnosis');
+        $reasonsForReferral = $this->input->post('reasonsForReferral');
+
+        // create array variable
+        $data = array(
+        'CardNo' => $cardNo,
+        'AuthorizationNo' => $authorizationNo,
+        'PatientFullName' => $patientFullName,
+        'PhysicianMobileNo' => $physicianMobileNo,
+        'Gender' => $gender,
+        'PhysicianName' => $physicianName,
+        'PhysicianQualificationID' => $physicianQualificationID,
+        'ServiceIssuingFacilityCode' => $serviceIssuingFacilityCode,
+        'ReferringDiagnosis' => $referringDiagnosis,
+        'ReasonsForReferral' => $reasonsForReferral
+        );
+        // print_r($data);
+        // exit;     
+        // set the data to send as a JSON string
+
+        $jsonData = json_encode($data);
+        $username = USERNAME;
+        $password = PASSWORD;
+        // set the Authorization Bearer token
+        $token = $this->getAuthenticationHeader($username, $password);
+        // set the cURL options
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, REFER_PATIENT_URL);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $token
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // execute the cURL request
+        $response = curl_exec($ch);        
+
+        // check for any errors
+        if(curl_error($ch)) {
+            $this->session->set_flashdata('error', 'cURL error: ' . curl_error($ch));
+            curl_close($ch);
+            redirect($_SERVER['HTTP_REFERER']);
+        } else {
+
+        // close the cURL session
+        curl_close($ch);
+        $data = json_decode($response, true);
+        if(gettype($data) != 'NULL'){
+
+        $this->db->insert('patient_referals', [
+            'ReferralID' => $data['ReferralID'],
+            'ReferralNo' => $data['ReferralNo'],
+            'CardNo' => $data['CardNo'],
+            'AuthorizationNo' => $data['AuthorizationNo'],
+            'PatientFullName' => $data['PatientFullName'],
+            'Gender' => $data['Gender'],
+            'ReferringDate' => $data['ReferringDate'],
+            'PhysicianName' => $data['PhysicianName'],
+            'PhysicianQualificationID' => $data['PhysicianQualificationID'],
+            'PhysicialMobileNo' => $data['PhysicialMobileNo'],
+            'ReferringDiagnosis' => $data['ReferringDiagnosis'],
+            'ReasonsForReferral' => $data['ReasonsForReferral'],
+            'SourceFacilityCode' => $data['SourceFacilityCode'],
+            'ServiceIssuingFacilityCode' => $data['ServiceIssuingFacilityCode'],
+            'CreatedBy' => $data['CreatedBy'],
+            'DateCreated' => $data['DateCreated'],
+            'LastModifiedBy' => $data['LastModifiedBy'],
+            'LastModified' => $data['LastModified']
+          ]);
+          $this->session->set_flashdata('success', "Patient Refered Successfully");
+          redirect('finance/refered');
+        } else{
+            $this->session->set_flashdata('error', $response);
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+         
+        }
+    }
+    function refered(){
+        $data['referals'] = $this->finance_model->referedPatient();
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('referedPatient', $data);
+        $this->load->view('home/footer'); // just the header file 
+    }
+    public function getPriceList(){
+        $search = $this->input->get('search');
+        $schemeId = $this->input->get('schemeId');
+        $result = $this->finance_model->getPriceLists($search, $schemeId);
+        // $data['result_q']=$result;
+        // echo json_encode($result);
+        echo "
+        <ul class ='mylist'>";
+        if(!empty($result)){
+            foreach ($result as $row) {
+            echo "<li id =".$row->id." class = 'select_product'>".$row->ItemName." (<b>".$row->SchemeID. ")</b></li>";
+            }
+        }else{
+            echo "<li>".lang('no_data')."</li>";
+        }
+        echo "</ul>"; 
+    }
+
+    public function getItemSelected(){
+        $itemId = $this->input->get('itemId');
+        $result = $this->finance_model->getItemSelected($itemId);
+        // echo json_encode($result);
+         echo "<tr>
+                <td>".$result->ItemName."</td>
+                <td><input class ='text-center' readonly type ='text' id ='UnitPrice' name ='UnitPrice[]' value ='".$result->UnitPrice."'></td>
+                <input class ='text-center' type ='hidden' id ='ItemCode' name ='ItemCode[]' value ='".$result->ItemCode."'>
+                <td> <input class ='text-center' type ='text' id ='ItemQuantity' name ='ItemQuantity[]' value ='1'></td>
+                <td> <input class ='text-center' readonly type ='text' id ='AmountClaimed' name ='AmountClaimed[]' value =".($result->UnitPrice*1)."></td>
+                <td  class = 'text-center' title ='delete' id='remove'><i  class='fa fa-minus' aria-hidden='true'></i></td>
+            </tr>";
+    }
+    function createFolioID(){
+
+        // Define the name of the file to store the number in
+        $filename = "foliosNumber.txt";
+
+        // Check if the file exists, and if not, create it with an initial value of 1
+        if (!file_exists($filename)) {
+            file_put_contents($filename, "1");
+        }
+
+        // Read the current value of the number from the file
+        $number = file_get_contents($filename);
+
+        // Increment the value of the number
+        $number++;
+
+        // Write the updated value of the number back to the file
+        file_put_contents($filename, $number);
+
+        // Output the value of the number
+        return $number;
+
+    }
+    function geneateBase64String($file){
+        // if ($this->input->method() == 'post')
+        // {
+            // Check if a file was uploaded
+            // if (!isset($_FILES['pdf_file']) || !is_uploaded_file($_FILES['pdf_file']['tmp_name']))
+            // {
+            //     echo 'Please select a PDF file to upload.';
+            //     return;
+            // }
+    
+            // Check if the uploaded file is a PDF file
+            $file_info = pathinfo($file);
+            // if ($file_info['extension'] != 'pdf')
+            // {
+            //     echo 'Please upload a PDF file.';
+            //     return;
+            // }
+    
+            // Read the file contents and serialize them as a base64 string
+            $pdf_data = file_get_contents($file);
+            $pdf_base64 = base64_encode($pdf_data);
+           
+            return $pdf_base64;
+        // }
+
+    }
+    function guidv4(): string {
+        if (function_exists('random_bytes')) {
+            $data = random_bytes(16);
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
+            $data = openssl_random_pseudo_bytes(16);
+        } else {
+            $data = uniqid('', true);
+        }
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+    
+    function claimSubmission(){             
+        $ClaimYear = date('Y');
+        $ClaimMonth = date('m');
+        $FolioNo = $this->createFolioID();
+        $SerialNo =$_POST['SerialNo'];
+        $CardNo =$_POST['CardNo'];
+        $FirstName =$_POST['FirstName'];
+        $LastName =$_POST['LastName'];
+        $Gender =$_POST['Gender'];
+        $SerialNo =$_POST['SerialNo'];
+        $DateOfBirth =$_POST['DateOfBirth'];
+        $TelephoneNo =$_POST['TelephoneNo'];
+        $PatientFileNo =$_POST['PatientFileNo'];
+        $PatientFile = $this->geneateBase64String($_FILES['PatientFile']['tmp_name']);
+        $ClaimFile =$this->geneateBase64String($_FILES['ClaimFile']['tmp_name']);
+        $AuthorizationNo =$_POST['AuthorizationNo'];
+        $AttendanceDate =$_POST['AttendanceDate'];
+        $PatientTypeCode =$_POST['PatientTypeCode'];
+        $DateAdmitted =$_POST['DateAdmitted'];
+        $DateDischarged =$_POST['DateDischarged'];
+        $PractitionerNo =$_POST['PractitionerNo'];
+        $DateCreated = date('Y-m-d');
+        $FolioDiseaseID = $this->guidv4();
+        $FolioID = $this->guidv4();
+        $DiseaseCode =$_POST['DiseaseCode'];
+        $CreatedBy = $_POST['CreatedBy'];
+        $ApprovalRefNo = '';
+        $diseases = explode(',', $_POST['DiseaseCode']);
+        $FolioDisease = array(); // create an empty array to store the FolioDiseases
+        foreach($diseases as $key => $value) {       
+            $FolioDisease[] = array(
+                'FolioDiseaseID' => $this->guidv4(),
+                'FolioID' => $FolioID,
+                'DiseaseCode' => $value,
+                'CreatedBy' => $CreatedBy,
+                'DateCreated' => $DateCreated
+            );
+        }
+        $i = isset($_POST['ItemCode']) ? sizeof($_POST['ItemCode']) : 0;
+        for ($r = 0; $r < $i; $r++) {
+       $ItemCode            = $_POST['ItemCode'][$r];
+       $ItemQuantity            = $_POST['ItemQuantity'][$r];
+       $UnitPrice            = $_POST['UnitPrice'][$r];
+       $AmountClaimed            = $_POST['AmountClaimed'][$r];
+       $FolioItem = [
+               'FolioItemID' =>$this->guidv4(),
+               'FolioID' =>$FolioID,
+
+               'ItemCode'        => $ItemCode,
+               'ItemQuantity'    => $ItemQuantity,
+               'UnitPrice'       => $UnitPrice,
+               'AmountClaimed'   => $AmountClaimed,
+               'ApprovalRefNo'   =>$ApprovalRefNo,
+               'CreatedBy'       =>$CreatedBy,
+               'DateCreated'     =>$DateCreated
+       ];
+       $FolioItems[] =$FolioItem;
+   }
+
+        $dataObject= [
+            'FolioID' =>$FolioID,
+            'FacilityCode' =>FACILITY_CODE,
+            'ClaimYear' => $ClaimYear,
+            'ClaimMonth' =>$ClaimMonth,
+            'FolioNo' => $this->createFolioID(),
+            'SerialNo' => $SerialNo,
+            'CardNo' =>$CardNo,
+            'FirstName' =>$FirstName,
+            'LastName' =>$LastName,
+            'Gender'   =>$Gender,
+            'DateOfBirth' =>$DateOfBirth,
+            'TelephoneNo'=>$TelephoneNo,
+            'PatientFileNo' =>$PatientFileNo,
+            'PatientFile'=>$PatientFile,
+            'ClaimFile' =>$ClaimFile,
+            'AuthorizationNo' =>$AuthorizationNo,
+            'AttendanceDate' =>$AttendanceDate,
+            'PatientTypeCode'=>$PatientTypeCode,
+            'DateAdmitted' =>$DateAdmitted,
+            'DateDischarged' =>$DateDischarged,
+            'PractitionerNo' =>$PractitionerNo,
+            'CreatedBy' => $CreatedBy,
+            'DateCreated' =>$DateCreated,
+            'FolioDiseases'=>$FolioDisease,
+            'FolioItems' =>$FolioItems
+
+        ];
+        $entitiesObject = array(
+            'entities' => array($dataObject)
+        );
+        $entities =json_encode($entitiesObject);
+        $username = USERNAME;
+        $password = PASSWORD;
+        // set the Authorization Bearer token
+        $token = $this->getAuthenticationHeaderClaimServer($username, $password);
+        // set the cURL options
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, SUBMIT_CLAIM_URL);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $entities);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $token
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // execute the cURL request
+        $response = curl_exec($ch); 
+        $outputdata = json_decode($response);
+        if(gettype($outputdata) != 'NULL')
+        {
+            $this->session->set_flashdata('success', "Claim Received Successfully");
+            // curl_close($ch);
+            redirect($_SERVER['HTTP_REFERER']);
+        } 
+        else{
+            $this->session->set_flashdata('error', $response);
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+        
+       
+    }
+    function admit()
+    {
+        // $data['referals'] = $this->finance_model->referedPatient();
+        $data['qualifications'] = $this->db->get('overal_qualification')->result();
+        // $data['facilities'] = $this->db->get('health_facilities')->result();
+        $data['doctors'] = $this->db->get('doctor')->result();
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('admit', $data);
+        $this->load->view('home/footer'); // just the header file 
+    }
+   function discharge()
+    {
+       
+         // $data['referals'] = $this->finance_model->referedPatient();
+         $data['qualifications'] = $this->db->get('overal_qualification')->result();
+         // $data['facilities'] = $this->db->get('health_facilities')->result();
+         $data['doctors'] = $this->db->get('doctor')->result();
+        
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('discharge', $data);
+        $this->load->view('home/footer'); // just the header file 
+       
+    }
+    function sendAdmission(){
+       // Get form input values
+    $data = array(
+        'CardNo' => $this->input->post('CardNo'),
+        'SchemeID' => $this->input->post('SchemeID'),
+        'FullName' => $this->input->post('FullName'),
+        'Gender' => $this->input->post('Gender'),
+        'Age' => $this->input->post('Age'),
+        'PhysicianMobileNo' => $this->input->post('PhysicianMobileNo'),
+        'AdmissionTypeID' => $this->input->post('AdmissionTypeID'),
+        'AuthorizationNo' => $this->input->post('AuthorizationNo'),
+        'AdmittingPhysicianName' => $this->input->post('AdmittingPhysicianName'),
+        'QualificationID' => $this->input->post('QualificationID'),
+        'DateAdmitted' => $this->input->post('DateAdmitted'),
+        'DiagnosisAtAdmission' => $this->input->post('DiagnosisAtAdmission'),
+        'ReasonsForAdmission' => $this->input->post('ReasonsForAdmission'),
+        'CreatedBy' => $this->input->post('CreatedBy')
+    );
+
+    $jsonData = json_encode($data);
+    $username = USERNAME;
+    $password = PASSWORD;
+    // set the Authorization Bearer token
+    $token = $this->getAuthenticationHeader($username, $password);
+    // set the cURL options
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, ADMIT_PATIENT_URL);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    'Content-Type: application/json',
+    'Authorization: Bearer ' . $token
+    ));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // execute the cURL request
+    $response = curl_exec($ch);        
+
+    // check for any errors
+    if(curl_error($ch)) {
+        $this->session->set_flashdata('error', 'cURL error: ' . curl_error($ch));
+        curl_close($ch);
+        redirect($_SERVER['HTTP_REFERER']);
+    }
+    else {
+        $string = json_decode($response)->Message;
+        $substring = "successfully admitted";
+
+        if(strpos($string, $substring)!== false){
+            $this->db->insert('admitted_patient', $data);
+            $this->session->set_flashdata('success', $string);
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+        // close the cURL session
+        // curl_close($ch);
+        // echo "<pre>";
+        // print_r($response);
+        // exit;
+        // $data = json_decode($response, true);
+        
+        $this->session->set_flashdata('error', $string);
+        redirect($_SERVER['HTTP_REFERER']);
+    }
+
+// You can now use the $data array as needed in your CodeIgniter controller.
+// For example, you can pass it to a model for further processing or use it to populate a database record.
+
+    }
+    function sendDischarge(){
+      
+        $data = array(
+            'CardNo' => $this->input->post('CardNo'),
+            'AdmissionID' => strtoupper($this->guidv4()),
+            'ComplainsDuringAdmission' => $this->input->post('ComplainsDuringAdmission'),
+            'ProgressInWard' => $this->input->post('ProgressInWard'),
+            'DiagnosisAtDischarge' => $this->input->post('DiagnosisAtDischarge'),
+            'ConditionsAtDischarge' => $this->input->post('ConditionsAtDischarge'),
+            'DiagnosisAtAdmission' => $this->input->post('DiagnosisAtAdmission'),
+            'PhysicianMobileNo' => $this->input->post('PhysicianMobileNo'),
+            'AdmissionTypeID' => $this->input->post('AdmissionTypeID'),
+            'DischargePhysicianName' => $this->input->post('DischargePhysicianName'),
+            'QualificationID' => $this->input->post('QualificationID'),
+            'DateDischarged' => $this->input->post('DateDischarged'),
+            'ReasonsForAdmission' => $this->input->post('ReasonsForAdmission'),
+            'CreatedBy' => $this->input->post('CreatedBy')
+        );
+        $AuthorizationNo =  $this->input->post('AuthorizationNo');
+        $CardNo = $this->input->post('CardNo');
+       
+            $jsonData = json_encode($data);
+            $username = USERNAME;
+            $password = PASSWORD;
+            
+            // set the Authorization Bearer token
+            $token = $this->getAuthenticationHeader($username, $password);
+            
+            // set the cURL options
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, DISCHARGE_PATIENT_URL);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token
+            ));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // execute the cURL request
+            $response = curl_exec($ch);   
+                
+
+            // check for any errors
+            if(curl_error($ch)) {
+                $this->session->set_flashdata('error', 'cURL error: ' . curl_error($ch));
+                curl_close($ch);
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+            else {
+               
+                // close the cURL session
+                // curl_close($ch);
+                // echo "<pre>";
+                // print_r($response);
+                // exit;
+                $response = json_decode($response);
+                $string = $response->Message;
+                $substring = "successfully discharged";
+
+                if(strpos($string, $substring) !==false){
+
+                    $this->db->query('UPDATE admitted_patient set status = 1 WHERE CardNo="'.$CardNo.'" AND AuthorizationNo="'.$AuthorizationNo.'"');
+                    $this->session->set_flashdata('success', $string );
+                    redirect($_SERVER['HTTP_REFERER']);
+                   
+                }else{           
+                $this->session->set_flashdata('error', $string);
+                 redirect($_SERVER['HTTP_REFERER']);
+                }
+            }
+    }
+    function ClaimConciliation()
+    {
+         // $data['referals'] = $this->finance_model->referedPatient();
+        //  $data['qualifications'] = $this->db->get('overal_qualification')->result();
+         // $data['facilities'] = $this->db->get('health_facilities')->result();
+        //  $data['doctors'] = $this->db->get('doctor')->result();
+       
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('claim_consiliation');
+        $this->load->view('home/footer'); // just the header file 
+    }
+    public function Reconsiliation(){
+
+            $FacilityCode = $this->input->post('FacilityCode');
+            $ClaimYear = $this->input->post('ClaimYear');
+            $ClaimMonth = $this->input->post('ClaimMonth');
+
+        $username = USERNAME;
+        $password = PASSWORD;
+        // set the Authorization Bearer token
+        $token = $this->getAuthenticationHeaderClaimServer($username, $password);
+        $url = CLAIM_RECONCILIATION_URL.'FacilityCode='.$FacilityCode.'&ClaimYear='.$ClaimYear.'&ClaimMonth='.$ClaimMonth;
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$token,
+        );
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
+        // check for any errors
+        if(curl_error($ch)) {
+            $this->session->set_flashdata('error', 'cURL error: ' . curl_error($ch));
+            curl_close($ch);
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+        else {
+
+            $this->session->set_flashdata('success', 'Sucess');
+            $this->load->view('home/dashboard'); // just the header file
+            $this->load->view('claim_consiliation', $response);
+            $this->load->view('home/footer'); // just the header file 
+        }
+    }
+    function ClaimAmount(){
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('claim_amount');
+        $this->load->view('home/footer'); // just the header file
+    }
+    function getClaimAmount(){
+
+        $FacilityCode = $this->input->post('FacilityCode');
+        $ClaimYear = $this->input->post('ClaimYear');
+        $ClaimMonth = $this->input->post('ClaimMonth');
+
+        $username = USERNAME;
+        $password = PASSWORD;
+        // set the Authorization Bearer token
+        $token = $this->getAuthenticationHeaderClaimServer($username, $password);
+        $url = CLAIMED_AMOUNT_URL.'FacilityCode='.$FacilityCode.'&ClaimYear='.$ClaimYear.'&ClaimMonth='.$ClaimMonth;
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$token,
+        );
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
+        // check for any errors
+        if(curl_error($ch)) {
+            $this->session->set_flashdata('error', 'cURL error: ' . curl_error($ch));
+            curl_close($ch);
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+        else {
+            $data = array('data'=>$response);
+            $this->session->set_flashdata('success', 'Sucess');
+            $this->load->view('home/dashboard'); // just the header file
+            $this->load->view('claim_amount', $data);
+            $this->load->view('home/footer'); // just the header file 
+        }
+    }
+    public function admitted(){
+        $data['admissions'] = $this->finance_model->admittedPatient();
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('admittedPatient', $data);
+        $this->load->view('home/footer'); // just the header file  
+    }
+
+
 }
+
 
 /* End of file finance.php */
 /* Location: ./application/modules/finance/controllers/finance.php */

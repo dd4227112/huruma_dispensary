@@ -1,0 +1,5 @@
+ERROR - 2023-01-16 15:24:45 --> Severity: 8192  --> Optional parameter $level declared before required parameter $msg is implicitly treated as a required parameter C:\xampp\htdocs\huduma\system\libraries\Log.php 73
+ERROR - 2023-01-16 15:28:02 --> Severity: 8192  --> strtolower(): Passing null to parameter #1 ($string) of type string is deprecated C:\xampp\htdocs\huduma\application\third_party\MX\Loader.php 146
+ERROR - 2023-01-16 15:28:02 --> Severity: 8192  --> strtolower(): Passing null to parameter #1 ($string) of type string is deprecated C:\xampp\htdocs\huduma\application\third_party\MX\Loader.php 146
+ERROR - 2023-01-16 15:28:02 --> Severity: 8192  --> strtolower(): Passing null to parameter #1 ($string) of type string is deprecated C:\xampp\htdocs\huduma\application\third_party\MX\Loader.php 146
+ERROR - 2023-01-16 18:10:50 --> Severity: 8192  --> Optional parameter $level declared before required parameter $msg is implicitly treated as a required parameter C:\xampp\htdocs\huduma\system\libraries\Log.php 73

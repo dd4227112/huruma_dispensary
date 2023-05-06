@@ -405,7 +405,62 @@ class Settings extends MX_Controller {
         $this->session->set_flashdata('info', 'Deleting of App Backup Successfull');
         redirect("settings/backups");
     }
+    // NHIF
+    function nhif_setup(){
+        $data['setup'] = $this->settings_model->getNHIFsetups();
+        $this->load->view('home/dashboard', $data); // just the header file
+        $this->load->view('settings/nhif_setup', $data);
+        $this->load->view('home/footer');
+    }
+  
+    function save_setup(){
+		// $this->load->model('finance_model');
+				// Get input values from form
+		$service_token_url = $this->input->post('service_token_url');
+		$claim_token_url = $this->input->post('claim_token_url');
+		$card_detail_url = $this->input->post('card_detail_url');
+		$authorize_card_url = $this->input->post('authorize_card_url');
+		$price_package_url = $this->input->post('price_package_url');
+		$submit_claim_url = $this->input->post('submit_claim_url');
+		$submited_claim_url = $this->input->post('submited_claim_url');
+		$refer_patient_url = $this->input->post('refer_patient_url'); 
+		$discharge_patient_url = $this->input->post('discharge_patient_url'); 
+		$admit_patient_url = $this->input->post('admit_patient_url'); 
+        $claim_reconciliation_url = $this->input->post('claim_reconciliation_url'); 
+		$claimed_amount_url = $this->input->post('claimed_amount_url'); 
+		$facility_code = $this->input->post('facility_code');
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		$environment = $this->input->post('environment');
 
+
+		// Create array to hold input values
+		$data = array(
+			'service_token_url' => $service_token_url,
+			'claim_token_url' => $claim_token_url,
+			'card_detail_url' => $card_detail_url,
+			'authorize_card_url' => $authorize_card_url,
+			'price_package_url' => $price_package_url,
+			'submit_claim_url' => $submit_claim_url,
+			'submited_claim_url' => $submited_claim_url,
+			'refer_patient_url' => $refer_patient_url,
+            'admit_patient_url' => $admit_patient_url,
+            'discharge_patient_url' => $discharge_patient_url,
+            'claim_reconciliation_url' => $claim_reconciliation_url,
+            'claimed_amount_url' => $claimed_amount_url,
+			'facility_code' => $facility_code,
+			'username' => $username,
+			'password' => $password,
+			'environment' => $environment,
+            
+		);
+
+        if($this->settings_model->save_setup($data)){
+            $this->session->set_flashdata('success', "Your settings saved successfully to the database!! ");
+            return redirect('settings/nhif_setup');
+        }
+		
+	 }
 }
 
 /* End of file settings.php */

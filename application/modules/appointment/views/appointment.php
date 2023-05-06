@@ -803,6 +803,7 @@
                                                                 // Get the record's ID via attribute  
                                                                 var iid = $(this).attr('data-id');
                                                                 var id = $(this).attr('data-id');
+                                                                
 
                                                                 $('#editAppointmentForm').trigger("reset");
                                                                 $('#myModal2').modal('show');

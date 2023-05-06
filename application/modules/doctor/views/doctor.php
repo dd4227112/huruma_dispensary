@@ -23,6 +23,7 @@
                         <thead>
                             <tr>
                                 <th><?php echo lang('doctor'); ?> <?php echo lang('id'); ?></th>
+                                <th><?php echo lang('regNo'); ?></th>                               
                                 <th><?php echo lang('name'); ?></th>
                                 <th><?php echo lang('email'); ?></th>
                                 <th><?php echo lang('phone'); ?></th>
@@ -73,7 +74,11 @@
             </div>
             <div class="modal-body row">
                 <form role="form" action="doctor/addNew" class="clearfix" method="post" enctype="multipart/form-data">
-                    <div class="form-group col-md-6">
+                <div class="form-group col-md-6">
+                        <label for="regNo"><?php echo lang('regNo'); ?></label>
+                        <input type="text" class="form-control" name="regNo" id="regNo" value='' placeholder="">
+                    </div>    
+                <div class="form-group col-md-6">
                         <label for="exampleInputEmail1"><?php echo lang('name'); ?></label>
                         <input type="text" class="form-control" name="name" id="exampleInputEmail1" value='' placeholder="">
                     </div>
@@ -154,6 +159,10 @@
             </div>
             <div class="modal-body">
                 <form role="form" id="editDoctorForm" class="clearfix" action="doctor/addNew" method="post" enctype="multipart/form-data">
+                <div class="form-group col-md-6">
+                        <label for="exampleInputEmail1"><?php echo lang('regNo'); ?></label>
+                        <input type="text" class="form-control" name="regNo" id="exampleInputEmail1" value='' placeholder="">
+                    </div>
                     <div class="form-group col-md-6">
                         <label for="exampleInputEmail1"><?php echo lang('name'); ?></label>
                         <input type="text" class="form-control" name="name" id="exampleInputEmail1" value='' placeholder="">
@@ -250,6 +259,10 @@
                         </div>
                     </div>
                     <div class="form-group col-md-6">
+                        <label for="exampleInputEmail1"><?php echo lang('regNo'); ?></label>
+                        <div class="regNoClass"></div>
+                    </div>
+                    <div class="form-group col-md-6">
                         <label for="exampleInputEmail1"><?php echo lang('name'); ?></label>
                         <div class="nameClass"></div>
                     </div>
@@ -304,6 +317,7 @@
             }).success(function (response) {
                 // Populate the form fields with the data returned from server
                 $('#editDoctorForm').find('[name="id"]').val(response.doctor.id).end()
+                $('#editDoctorForm').find('[name="regNo"]').val(response.doctor.regNo).end()
                 $('#editDoctorForm').find('[name="name"]').val(response.doctor.name).end()
                 $('#editDoctorForm').find('[name="password"]').val(response.doctor.password).end()
                 $('#editDoctorForm').find('[name="email"]').val(response.doctor.email).end()
@@ -333,6 +347,7 @@
             var iid = $(this).attr('data-id');
 
             $("#img1").attr("src", "uploads/cardiology-patient-icon-vector-6244713.jpg");
+            $('.regNoClass').html("").end()
             $('.nameClass').html("").end()
             $('.emailClass').html("").end()
             $('.addressClass').html("").end()
@@ -347,6 +362,7 @@
             }).success(function (response) {
                 // Populate the form fields with the data returned from server
                 $('#editDoctorForm').find('[name="id"]').val(response.doctor.id).end()
+                $('.regNoClass').append(response.doctor.regNo).end()
                 $('.nameClass').append(response.doctor.name).end()
                 $('.emailClass').append(response.doctor.email).end()
                 $('.addressClass').append(response.doctor.address).end()

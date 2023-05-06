@@ -150,7 +150,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1"><?php echo lang('blodd_group'); ?></label>
+                                            <label for="exampleInputEmail1"><?php echo lang('blood_group'); ?></label>
                                             <select class="form-control m-bot15" name="bloodgroup" value=''>
                                                 <?php foreach ($groups as $group) { ?>
                                                     <option value="<?php echo $group->group; ?>" <?php

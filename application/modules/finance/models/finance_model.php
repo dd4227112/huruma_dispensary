@@ -104,6 +104,7 @@ class Finance_model extends CI_model {
         $query = $this->db->get('payment');
         return $query->result();
     }
+    
 
     function getPaymentByPatientIdByDate($id, $date_from, $date_to) {
         $this->db->where('hospital_id', $this->session->userdata('hospital_id'));
@@ -994,5 +995,74 @@ class Finance_model extends CI_model {
 
         return $due_balance = $bill_balance - $deposit_balance;
     }
+    function getPatientNhifStatus($id){
+        $this->db->where('id', $id);
+        $query = $this->db->get('patient');
+        return $query->row();
+    }
+    function save_authorization_data($authorization_data){
+        $card_number = $authorization_data['CardNo'];
+        $authotized_card = $this->getauthorizationcardnumber($card_number);
+        if ($authotized_card) {
+        return $this->db->update('nhif_authorization', $authorization_data, ['CardNo'=>$card_number] );    
+        } 
+        else
+        {
+        return $this->db->insert('nhif_authorization', $authorization_data );
+        }
+    }
+    function getauthorizationcardnumber($id){
+        $this->db->select('CardNo');
+        $this->db->where('CardNo', $id);
+        $query = $this->db->get('nhif_authorization');
+        return $query->row();
+    }
+    function PricePackage($pricePackage){
+        return $this->db->insert_batch('price_packages', $pricePackage);
+    }
+    function getPackages(){
+        $query = $this->db->get('price_packages');
+        return $query->result();
+    }
+    function dropExistingPackages(){
+        return $this->db->empty_table('price_packages');
+    }
+    function excludedServices($excludedServices){
+        return $this->db->insert_batch('excludedservices', $excludedServices);
+    }
+    function dropExistingServices(){
+        return $this->db->empty_table('excludedservices');
+    }
+    function getSerives(){
+        $query = $this->db->get('excludedservices');
+        return $query->result();  
+    }
+    function seachByAthorizationNumber($authorizationNUmber){
+       $this->db->where('AuthorizationNo', $authorizationNUmber);
+       $this->db->where('AuthorizationStatus', 'ACCEPTED');
 
+       return $this->db->get('nhif_authorization')->row();
+    }
+    function seachAdmittedPatient($card_number){
+        $this->db->where('CardNo', $card_number); 
+        return $this->db->get('admitted_patient')->row();
+     }
+    
+    function referedPatient(){
+    $query=$this->db->query("select a.*, b.name, b.code, b.class,b.region FROM patient_referals a join health_facilities b on a.ServiceIssuingFacilityCode = b.code order by a.DateCreated desc");
+    return $query->result();
+    }
+    function getPriceLists($search, $schemeId){
+        $this->db->where('ItemName like', '%'.$search.'%');
+        $this->db->where('SchemeID',  $schemeId);      
+        return $this->db->get('price_packages')->result();
+    }
+    function getItemSelected($itemId){
+        $this->db->where('id',  $itemId);      
+        return $this->db->get('price_packages')->row();
+    }
+    public function admittedPatient(){
+        return $this->db->get('admitted_patient')->result();
+    }
+    
 }

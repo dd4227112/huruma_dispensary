@@ -1,5 +1,6 @@
 <!--sidebar end-->
 <!--main content start-->
+
 <section id="main-content">
     <section class="wrapper site-min-height">
         <!-- page start-->
@@ -28,6 +29,7 @@
                                 <th><?php echo lang('patient_id'); ?></th>                        
                                 <th><?php echo lang('name'); ?></th>
                                 <th><?php echo lang('phone'); ?></th>
+                                <th><?php echo lang('nhif_benefit'); ?></th>
                                 <?php if ($this->ion_auth->in_group(array('admin', 'Accountant', 'Receptionist'))) { ?>
                                     <th><?php echo lang('due_balance'); ?></th>
                                 <?php } ?>
@@ -44,14 +46,6 @@
                                 border-radius: 100px;
                             }
                         </style>
-
-
-
-
-
-
-
-
                         </tbody>
                     </table>
                 </div>

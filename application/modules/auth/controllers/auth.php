@@ -75,11 +75,11 @@ class Auth extends MX_Controller {
 				redirect('/', 'refresh');
 			}
 			else
-			{
-				//if the login was un-successful
+			{				//if the login was un-successful
+			
 				//redirect them back to the login page
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				redirect('auth/login', 'refresh'); //use redirects instead of loading views for compatibility with MY_Controller libraries
+			redirect('auth/login', 'refresh'); //use redirects instead of loading views for compatibility with MY_Controller libraries
 			}
 		}
 		else
@@ -98,7 +98,8 @@ class Auth extends MX_Controller {
 				'type' => 'password',
 			);
 
-			$this->_render_page('auth/login', $data);
+			// $this->_render_page('auth/login', $data);
+			$this->load->view('auth/login', $data);
 		}
 	}
 

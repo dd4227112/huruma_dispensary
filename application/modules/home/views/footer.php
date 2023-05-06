@@ -54,6 +54,7 @@
 <script type="text/javascript" src="common/assets/bootstrap-fileupload/bootstrap-fileupload.js"></script>
 
 
+
 <?php
 $language = $this->db->get('settings')->row()->language;
 

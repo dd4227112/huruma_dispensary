@@ -36,6 +36,17 @@
                                 ?>' placeholder="">
                             </div>
                             <div class="form-group">
+                                <label for="regNo"><?php echo lang('regNo'); ?></label>
+                                <input type="text" class="form-control" name="regNo" id="regNo" value='<?php
+                                if (!empty($setval)) {
+                                    echo set_value('regNo');
+                                }
+                                if (!empty($doctor->regNo)) {
+                                    echo $doctor->regNo;
+                                }
+                                ?>' placeholder="">
+                            </div>
+                            <div class="form-group">
                                 <label for="exampleInputEmail1"><?php echo lang('email'); ?></label>
                                 <input type="text" class="form-control" name="email" id="exampleInputEmail1" value='<?php
                                 if (!empty($setval)) {

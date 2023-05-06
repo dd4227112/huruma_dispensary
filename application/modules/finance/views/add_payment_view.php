@@ -12,7 +12,7 @@
                     echo lang('add_new_payment');
                 ?>
             </header>
-            <button data-toggle="modal" href="#cardNumberModal" style="background-color: green; color:white;" class="btn btns-sm float-right">Verify NHIF card</button>
+            <!-- <button data-toggle="modal" href="#cardNumberModal" style="background-color: green; color:white;" class="btn btns-sm float-right">Verify NHIF card</button> -->
             <div class="">
                 <div class="adv-table editable-table ">
                     <div class="clearfix">
@@ -69,43 +69,9 @@
                                         }
 
                                     </style>
-                                   
-                                    <h3>Card Verification details</h3>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <table class="table table-responsive">
-                                                <thead>
-                                                <tr>
-                                                    <th>Card Number</th>
-                                                    <th>Full Name</th>
-                                                    <th>Date of Birth</th>
-                                                    <th>Expire Date</th>
-                                                    <th>AuthorizationStatus</th>
-                                                    <th>AuthorizatinNo</th>
-                                                    <th>EmployerNo</th>
-                                                    <th>SchemeID</th>
-                                                    <th>ProductCode</th>
-                                                    <th>Remarks</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                    <td>Card Verified</td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                    <div class="row verification_header" >
+
                                     </div>
-                                   
                                     <form role="form" id="editPaymentForm" class="clearfix" action="finance/addPayment" method="post" enctype="multipart/form-data">
 
                                         <div class="col-md-5 row">
@@ -154,6 +120,7 @@
                                                         ?> ><?php echo $patient->name; ?> </option>
                                                             <?php } ?>
                                                 </select>
+                                                <span class="text-success patient_status"></span>
                                             </div> 
 
 
@@ -217,6 +184,37 @@
                                                         ?> > Others </option>
                                                     </select>
                                                 </div>
+                                                <!-- NHIF beneficiary -->
+                                                <div class="col-md-6 payment pad_bot nhif_benefit">
+                                                    <label for="exampleInputEmail1"> <?php echo lang('nhif_benefit'); ?></label>
+                                                    <select class="form-control m-bot15" id="nhif_benefit" name="nhif_benefit" value=''>
+
+                                                        <option value="2" <?php
+                                                        if (!empty($patient->nhif_benefit)) {
+                                                            if ($patient->nhif_benefit == '2') {
+                                                                echo 'selected';
+                                                            }
+                                                        }
+                                                        ?> > No </option>   
+                                                        <option value="1" <?php
+                                                        if (!empty($patient->nhif_benefit)) {
+                                                            if ($patient->nhif_benefit == '1') {
+                                                                echo 'selected';
+                                                            }
+                                                        }
+                                                        ?> > Yes </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 payment pad_bot card_no">
+                                                    <label for="exampleInputEmail1"> <?php echo lang('card_no'); ?></label>
+                                                    <input type="text" class="form-control pay_in" id="card_no" name="card_no" value='<?php
+                                                    if (!empty($payment->card_no)) {
+                                                        echo $payment->card_no;
+                                                    }
+                                                    ?>' placeholder="">
+                                                    <span class="text-danger" id="card_notice"></span>
+                                                </div>
+                                                
                                             </div>
 
                                             <div class="col-md-12 payment pad_bot">
@@ -602,19 +600,40 @@
 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="cardNumberModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form method="post" action="finance/getCardNumber">
+                    <form method="get" id="VerifyCard" action ='finance/getCardNumber'>
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title">NHIF beneficiary? Enter card number</h4>
                         </div>
 
                         <div class="modal-body">
-                            <p>Enter patient NHIF card number to verify</p>
-                            <input type="text" name="CardNo" placeholder="Card Number" autocomplete="off" class="form-control placeholder-no-fix">
+                            <div class="row" style="padding-top:5%;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <!-- <p>Enter patient NHIF card number to verify</p> -->
+                                    <label for="cardNo">Patient NHIF card number</label>
+                                    <input  id ="CardNo" type="text" name="CardNo" placeholder="Enter patient NHIF card number to verify" autocomplete="off" class="form-control placeholder-no-fix">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="visitType">Visit Type</label>
+                                        <select name="visitType" id="visitType" autocomplete="off" class="form-control placeholder-no-fix">
+                                            <option value="">Select.....</option>
+                                            <option value="1">Normal Visit</option>
+                                            <option value="2"> Emergency</option>
+                                            <option value="3"> Referal</option>
+                                            <option value="4"> Follow up visit</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-sm" name="Verify" type="submit">Verify</button>
+                        <button class=" close_modal btn btn-sm btn-danger" name="Cancel">Cancel</button>
+                            <button class="btn btn-sm btn-success" name="Verify" type="submit">Verify</button>
                         </div>
                     </form>
                 </div>
@@ -729,6 +748,14 @@ if ($discount_type == 'flat') {
 
 
 <script>
+    $(document).ready(function () {
+        $('.close_modal').on('click', function(e){
+            e.preventDefault();
+            $('#CardNo').val('');
+            $('#visitType').val('');
+            $('#cardNumberModal').modal("hide");
+        });
+    });
     $(document).ready(function () {
 
         var tot = 0;
@@ -1061,7 +1088,23 @@ if ($discount_type == 'flat') {
                 $('.pos_client').show();
             } else {
                 $('.pos_client').hide();
-            }
+            }       
+            $.ajax({
+                url: 'finance/getPatientNhifStatus?id=' + v,
+                method: 'GET',
+                data: '',
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if(response.nhif_benefit == 1){
+                    $('.patient_status').text('NHIF Member');
+                    $('#CardNo').val(response.card_no);
+                    } else{                  
+                    $('.patient_status').text(''); 
+                    $('#CardNo').val('');
+                    }
+                }
+            });
         });
 
     });
@@ -1090,6 +1133,109 @@ if ($discount_type == 'flat') {
 <script>
     $(document).ready(function () {
         $('.card').hide();
+        $('.card_no').hide();
+        $(document.body).on('change', '.nhif_benefit', function () {
+
+        var v = document.getElementById('nhif_benefit').value;       
+
+        if (v == '1') {
+            $('.card_no').show();
+            
+        } else {
+          $('.card_no').hide();
+        }
+        });
+        $(document.body).on('submit', '#editPaymentForm', function () {
+            // return false;
+                var v = document.getElementById('nhif_benefit').value;
+                var card_no = document.getElementById('card_no').value;
+                // alert(card_no);
+                if(v == '1' && card_no == ''){
+                    $('#card_notice').text('Card Number is required');
+                    return false;
+                }
+        });
+        $(document.body).on('submit', '#VerifyCard', function (e) {
+           e.preventDefault();
+            // return false;
+                var visitType = document.getElementById('visitType').value;
+                var card_no = document.getElementById('CardNo').value;
+                
+                $.ajax({
+                url: 'finance/getCardNumber',
+                method: 'GET',
+                data: {visitType:visitType, CardNo:card_no},
+                dataType: 'json',
+                success: function (response) {
+                    $('#cardNumberModal').modal("hide");
+                    $('#CardNo').val('');
+                    $('#visitType').val('');
+                    console.table(response);
+                
+                    var html = " <h3>Card Verification details</h3> "+
+                                    " <div class='col-12'>"+
+                                        "<table class='table table-responsive'>"+
+                                           "<thead>"+
+                                           "<tr>"+
+                                           "   <th>Card Number</th>"+
+                                           "  <th>Full Name</th>"+
+                                           "  <th>Gender</th>"+
+                                           "  <th>Date of Birth</th>"+
+                                           "  <th>Expire Date</th>"+
+                                           "  <th>Card Status</th>"+
+                                           " <th>Authorization Status</th>"+
+                                           " <th>Authorizatin No</th>"+
+                                           "  <th>Employer No</th>"+
+                                           " <th>Scheme ID</th>"+
+                                           " <th>Product Code</th>"+
+                                           " <th>LatestAuthorization</th>"+
+                                           " <th>Remarks</th>"+
+                                           " </tr>"+
+                                           " </thead>"+
+                                           " <tbody>"+
+                                           "<tr>"+
+                                           " <td>"+response.CardNo+"</td>"+
+                                           " <td>"+response.FirstName +' '+ response.MiddleName+' '+ response.LastName+"</td>"+
+                                           " <td>"+response.Gender+"</td>"+
+                                           " <td>"+response.DateOfBirth+"</td>"+
+                                           " <td>"+response.ExpiryDate+"</td>"+
+                                           " <td><b>"+response.CardStatus+"</b></td>"+
+                                           " <td>"+response.AuthorizationStatus+"</td>"+
+                                           " <td>"+response.AuthorizationNo+"</td>"+
+                                           " <td>"+response.EmployerNo+"</td>"+
+                                           " <td>"+response.SchemeID+"</td>"+
+                                           " <td>"+response.ProductCode+"</td>"+
+                                           " <td>"+response.LatestAuthorization+"</td>"+
+                                           " <td>"+response.Remarks+"</td>"+
+                                             "</tr>"+
+                                                "</tbody>"+
+                                                "</table>"+
+                                                "<a class='btn btn-sm btn-primary ' href='<?=base_url("finance/verifyCard")?>'>Authorize card</a>"+
+                                                "</div>";
+                    $('.verification_header').html(html);
+                    }
+                });
+            });
+        
+        $(document.body).on('submit', '#editPaymentForm', function (e) {
+            // return false;
+                var v = document.getElementById('nhif_benefit').value;
+                var card_no = document.getElementById('card_no').value;
+                // alert(card_no);
+                if(v == '1' && card_no == ''){
+                    $('#card_notice').text('Card Number is required');
+                    return false;
+                }
+        });
+
+        $(document.body).on('keyup', '#card_no', function () {
+            // return false;
+            
+                var card_no = document.getElementById('card_no').value;
+                // alert(card_no);
+                $('#CardNo').val(card_no);
+        });
+
         $(document.body).on('change', '#selecttype', function () {
 
             var v = $("select.selecttype option:selected").val()

@@ -61,15 +61,18 @@ if (!$this->ion_auth->in_group(array('superadmin'))) {
         <link href="common/assets/fullcalendar/fullcalendar.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="common/assets/select2/css/select2.min.css"/>
         <link rel="stylesheet" type="text/css" href="common/assets/bootstrap-fileupload/bootstrap-fileupload.css" />
-        <link rel="stylesheet" type="text/css" href="common/assets/bootstrap-wysihtml5/bootstrap-wysihtml5.css" />
+        <link rel="stylesheet" type="text/css" href="common/assets/bootstrap-wysihtml5/bootstrap-wysihtml5.css" /> 
+     
+        <!-- <link href="common/select2/dist/css/select2.min.css" rel="stylesheet" /> -->
 
-
-
-
+        <script src="common/select2/dist/js/select2.min.js"></script>
+        <script src="common/swal/sweetalert2.all.min.js"></script>
+        
+        <!-- <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" rel="stylesheet" /> -->
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
         <!--[if lt IE 9]>
-          <script src="js/html5shiv.js"></script>
+          
           <script src="js/respond.min.js"></script>
         <![endif]-->
 
@@ -644,6 +647,58 @@ if (!$this->ion_auth->in_group(array('superadmin'))) {
                                 </li>
                             <?php } ?>
                         <?php } ?>
+
+
+
+
+
+
+
+
+                        <?php if ($this->ion_auth->in_group(array('Receptionist', 'admin'))) { ?>
+                            <?php if (in_array('finance', $this->modules)) { ?>
+                                <li> <li class="sub-menu">
+                                    <a href="javascript:;" >
+                                        <i class="fa fa-home"></i> 
+                                        <span><?=lang('nhif')?></span>
+                                    </a>
+                                    <ul class="sub"> 
+                                        <li><a href="finance/cardDetails"><i class="fa fa-list-alt"></i><?php echo lang('card_detail'); ?></a></li>
+                                         <li><a href="finance/authorizeCard"><i class="fa fa-info-circle"></i><?php echo lang('authorize'); ?></a></li>
+                                         <li><a href="finance/Download"><i class="fa fa-download"></i><?php echo lang('nhif_tariffs'); ?></a></li>
+                                        <li><a href="finance/Claim"><i class="fa fa-share-square"></i><?php echo lang('claim_submit'); ?></a></li>
+                                        <li><a href="finance/ClaimConciliation"><i class="fa fa-share-square"></i><?php echo lang('claim_consl'); ?></a></li>
+                                        <li><a href="finance/ClaimAmount"><i class="fa fa-share-square"></i><?php echo lang('claim_amount'); ?></a></li>
+                                        <!-- <li><a href="finance/Referer"><i class="fa fa-home"></i><?php echo lang('refer_patient'); ?></a></li> -->
+                                        <li><a href="finance/refered"><i class="fa fa-file"></i><?php echo lang('refer_patient'); ?></a></li>
+                                        <!-- <li><a href="finance/admit"><i class="fa fa-file"></i><?php echo lang('admit_patient'); ?></a></li> -->
+                                        <li><a href="finance/admitted"><i class="fa fa-file"></i><?php echo lang('admitted_discharge'); ?></a></li>
+                                        <!-- <li><a href="finance/refered"><i class="fa fa-file"></i><?php echo lang('refered_patient'); ?></a></li> -->
+
+                                       <!-- <li><a href="finance/calendar"><i class="fa fa-list-alt"></i><?php echo lang('calendar'); ?></a></li>
+                                        <li><a href="finance/request"><i class="fa fa-list-alt"></i><?php echo lang('request'); ?></a></li>  -->
+                                    </ul>
+                                </li>
+                            <?php } ?>
+                        <?php } ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <?php if ($this->ion_auth->in_group('admin')) { ?>
                             <li> <li class="sub-menu">
                                 <a href="javascript:;" >
@@ -970,6 +1025,7 @@ if (!$this->ion_auth->in_group(array('superadmin'))) {
                                 <ul class="sub">
                                     <li><a href="settings"><i class="fa fa-gear"></i><?php echo lang('system_settings'); ?></a></li>
                                     <li><a href="pgateway"><i class="fa fa-gear"></i><?php echo lang('payment_gateway'); ?></a></li>
+                                     <li><a href="settings/nhif_setup"><i class="fa fa-gear"></i><?php echo lang('nhif_setup'); ?></a></li>
                                     <li><a href="settings/language"><i class="fa fa-wrench"></i><?php echo lang('language'); ?></a></li>
                                 </ul>
                             </li>
@@ -1244,7 +1300,9 @@ if (!$this->ion_auth->in_group(array('superadmin'))) {
 
                         <?php if ($this->ion_auth->in_group(array('superadmin'))) { ?>
                             <li><a href="settings"><i class="fa fa-gear"></i><?php echo lang('system_settings'); ?></a></li>
+                            <li><a href="settings/nhif_setup"><i class="fa fa-gear"></i><?php echo lang('nhif_setup'); ?></a></li>
                             <li><a href="settings/language"><i class="fa fa-gear"></i><?php echo lang('language'); ?></a></li>
+
                         <?php } ?>
 
 

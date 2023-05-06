@@ -49,6 +49,7 @@ class Doctor extends MX_Controller {
         }
 
         $name = $this->input->post('name');
+        $regNo = $this->input->post('regNo');
         $password = $this->input->post('password');
         $email = $this->input->post('email');
         $address = $this->input->post('address');
@@ -60,6 +61,9 @@ class Doctor extends MX_Controller {
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
         // Validating Name Field
         $this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[1]|max_length[100]|xss_clean');
+        // Validating registration number Field
+        $this->form_validation->set_rules('regNo', 'Registration Number', 'trim|required|min_length[1]|max_length[100]|xss_clean');
+    
         // Validating Password Field
         if (empty($id)) {
             $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[5]|max_length[100]|xss_clean');
@@ -124,6 +128,7 @@ class Doctor extends MX_Controller {
                 $data = array();
                 $data = array(
                     'img_url' => $img_url,
+                    'regNo' => $regNo,
                     'name' => $name,
                     'email' => $email,
                     'address' => $address,
@@ -135,6 +140,7 @@ class Doctor extends MX_Controller {
                 //$error = array('error' => $this->upload->display_errors());
                 $data = array();
                 $data = array(
+                    'regNo' => $regNo,
                     'name' => $name,
                     'email' => $email,
                     'address' => $address,
@@ -278,6 +284,7 @@ class Doctor extends MX_Controller {
 
             $info[] = array(
                 $doctor->id,
+                $doctor->regNo,
                 $doctor->name,
                 $doctor->email,
                 $doctor->phone,
