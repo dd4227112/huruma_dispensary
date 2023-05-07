@@ -308,7 +308,6 @@
             });
         }
     }); 
-    adddiseasecode
     $(document).on("click", "#adddiseasecode", function(event){
         event.preventDefault();
         

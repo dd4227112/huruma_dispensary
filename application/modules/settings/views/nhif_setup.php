@@ -15,6 +15,12 @@
                 </div>                   
             </div>
             <div class="panel-body">
+                <div class="col-md-4"> <a class="btn btn-sm btn-primary" href="<?=base_url('settings/clear_old')?>">Clear Old Database</a></div>   
+                <div class="col-md-4"><a class="btn btn-sm btn-primary" href="<?=base_url('settings/sync')?>">Sync new Database</a></div> 
+                <div class="col-md-4"><a class="btn btn-sm btn-primary" href="<?=base_url('settings/verify')?>">Compare data</a></div>               
+
+            </div>
+            <div class="panel-body">
             <?php if ($this->session->flashdata('success')) { ?>
             <div class="alert alert-success alert-dismissible text-center">
             <button type="button" class="close" data-dismiss="alert">&times;</button>

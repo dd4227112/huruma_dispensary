@@ -461,9 +461,48 @@ class Settings extends MX_Controller {
         }
 		
 	 }
+    public function clear_old(){
+        $tables =$this->db->query("select TABLE_NAME as table_name from information_schema.tables where table_schema ='huduma' and TABLE_NAME IN (select TABLE_NAME from information_schema.tables where table_schema ='hospital') and TABLE_NAME NOT IN ('users', 'groups', 'users_groups')")->result();
+        foreach($tables as $table){
+        $this->db->query("delete from huduma.".$table->table_name);
+        }
+        // $this->db->query("insert into huduma.groups select * from hospital.groups");
+        // $this->db->query("insert into huduma.users select * from hospital.users");
+        // $this->db->query("insert into huduma.users_groups select * from hospital.users_groups");
+        $this->session->set_flashdata('success', "Operation successfully");
+        redirect($_SERVER['HTTP_REFERER']);
+        // print_r($tables);
+    
+    }
+    public function verify(){
+        $this->load->view('home/dashboard'); // just the header file
+        $this->load->view('settings/verify');
+        $this->load->view('home/footer');
+        
+
+    }
+    public function sync(){
+       
+        $tables =$this->db->query("select TABLE_NAME as table_name from information_schema.tables where table_schema ='huduma' and TABLE_NAME IN (select TABLE_NAME from information_schema.tables where table_schema ='hospital') and TABLE_NAME NOT IN ('users', 'groups', 'users_groups')")->result();
+        
+        $this->db->query("ALTER TABLE hospital.`doctor` ADD `regNo` VARCHAR(256) NULL AFTER `profile`, ADD `physician_qualification_id` INT(10) NOT NULL DEFAULT '100' AFTER `hospital_id`");
+        $this->db->query("ALTER TABLE hospital.`patient` ADD `nhif_benefit` INT(1) NOT NULL DEFAULT '2' AFTER `age` , ADD `card_no` VARCHAR(256) NULL AFTER `nhif_benefit` ");
+
+        $this->db->query("ALTER TABLE hospital.`nurse` ADD `physician_qualification_id` INT(10) NOT NULL DEFAULT '100' AFTER `hospital_id`");
+
+        $this->db->query("SET FOREIGN_KEY_CHECKS = 0");
+        foreach($tables as $table){
+        $this->db->query("insert into huduma.".$table->table_name." select * from hospital.".$table->table_name);
+        }
+        $this->session->set_flashdata('success', "Operation successfully, now you can continue with usage");
+
+        redirect($_SERVER['HTTP_REFERER']);
+    
+    }
 }
 
 /* End of file settings.php */
 /* Location: ./application/modules/settings/controllers/settings.php */
 
+// select TABLE_NAME from information_schema.tables where table_schema ='huduma' and TABLE_NAME NOT IN (select TABLE_NAME from information_schema.tables where table_schema ='hospital');
 
