@@ -53,7 +53,7 @@ class Finance extends MX_Controller {
         // exit;
         // return $tokenOutput->{'access_token'};
         if(empty($tokenOutput)){
-            $this->session->set_flashdata('error', "Error!! Check Internet your Connection");
+            $this->session->set_flashdata('error', "<b>Error!! Unable to get Access Token</b>. Try to your check internet connection.<br> If the problem persist, Contact your system adminstrator");
             redirect($_SERVER['HTTP_REFERER']);
             ?>
             <!-- <script>alert('Error!! Check Internet your Connection')</script> -->
@@ -91,7 +91,7 @@ class Finance extends MX_Controller {
         // exit;
         // return $tokenOutput->{'access_token'};s
         if(empty($tokenOutput)){
-            $this->session->set_flashdata('error', "Error!! Check Internet your Connection");
+            $this->session->set_flashdata('error', "<b>Error!! Unable to get Access Token</b>. Try to your check internet connection.<br> If the problem persist, Contact your system adminstrator");
             redirect($_SERVER['HTTP_REFERER']);
             ?>
             <!-- <script>alert('Error!! Check Internet your Connection')</script> -->
@@ -2166,11 +2166,11 @@ class Finance extends MX_Controller {
         // echo json_encode($result);
          echo "<tr>
                 <td>".$result->ItemName."</td>
-                <td><input class ='text-center' readonly type ='text' id ='UnitPrice' name ='UnitPrice[]' value ='".$result->UnitPrice."'></td>
-                <input class ='text-center' type ='hidden' id ='ItemCode' name ='ItemCode[]' value ='".$result->ItemCode."'>
-                <td> <input class ='text-center' type ='text' id ='ItemQuantity' name ='ItemQuantity[]' value ='1'></td>
-                <td> <input class ='text-center' readonly type ='text' id ='AmountClaimed' name ='AmountClaimed[]' value =".($result->UnitPrice*1)."></td>
-                <td  class = 'text-center' title ='delete' id='remove'><i  class='fa fa-minus' aria-hidden='true'></i></td>
+                <td><input class ='text-center form-control' readonly type ='text' id ='UnitPrice' name ='UnitPrice[]' value ='".$result->UnitPrice."'></td>
+                <input class ='text-center form-control' type ='hidden' id ='ItemCode' name ='ItemCode[]' value ='".$result->ItemCode."'>
+                <td> <input class ='text-center form-control' type ='text' id ='ItemQuantity' name ='ItemQuantity[]' value ='1'></td>
+                <td> <input class ='text-center form-control' readonly type ='text' id ='AmountClaimed' name ='AmountClaimed[]' value =".($result->UnitPrice*1)."></td>
+                <td  class = 'text-center form-control' title ='delete' id='remove'><i  class='fa fa-minus' aria-hidden='true'></i></td>
             </tr>";
     }
     function createFolioID(){
@@ -2235,7 +2235,7 @@ class Finance extends MX_Controller {
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
     
-    function claimSubmission(){             
+    function claimSubmission(){         
         $ClaimYear = date('Y');
         $ClaimMonth = date('m');
         $FolioNo = $this->createFolioID();
@@ -2262,37 +2262,41 @@ class Finance extends MX_Controller {
         $DiseaseCode =$_POST['DiseaseCode'];
         $CreatedBy = $_POST['CreatedBy'];
         $ApprovalRefNo = '';
-        $diseases = explode(',', $_POST['DiseaseCode']);
-        $FolioDisease = array(); // create an empty array to store the FolioDiseases
-        foreach($diseases as $key => $value) {       
-            $FolioDisease[] = array(
+
+        $i = isset($_POST['DiseaseCode']) ? sizeof($_POST['DiseaseCode']) : 0;
+        for ($r = 0; $r < $i; $r++) {
+            $DiseaseCode            = $_POST['DiseaseCode'][$r];
+            $Status            = $_POST['Status'][$r];
+            $FolioDiseases = [
                 'FolioDiseaseID' => $this->guidv4(),
                 'FolioID' => $FolioID,
-                'DiseaseCode' => $value,
+                'DiseaseCode' => $DiseaseCode,
+                'Status'       =>$Status,
                 'CreatedBy' => $CreatedBy,
                 'DateCreated' => $DateCreated
-            );
+            ];
+            $FolioDisease[] =$FolioDiseases;
         }
+
         $i = isset($_POST['ItemCode']) ? sizeof($_POST['ItemCode']) : 0;
         for ($r = 0; $r < $i; $r++) {
-       $ItemCode            = $_POST['ItemCode'][$r];
-       $ItemQuantity            = $_POST['ItemQuantity'][$r];
-       $UnitPrice            = $_POST['UnitPrice'][$r];
-       $AmountClaimed            = $_POST['AmountClaimed'][$r];
-       $FolioItem = [
-               'FolioItemID' =>$this->guidv4(),
-               'FolioID' =>$FolioID,
-
-               'ItemCode'        => $ItemCode,
-               'ItemQuantity'    => $ItemQuantity,
-               'UnitPrice'       => $UnitPrice,
-               'AmountClaimed'   => $AmountClaimed,
-               'ApprovalRefNo'   =>$ApprovalRefNo,
-               'CreatedBy'       =>$CreatedBy,
-               'DateCreated'     =>$DateCreated
-       ];
-       $FolioItems[] =$FolioItem;
-   }
+            $ItemCode            = $_POST['ItemCode'][$r];
+            $ItemQuantity            = $_POST['ItemQuantity'][$r];
+            $UnitPrice            = $_POST['UnitPrice'][$r];
+            $AmountClaimed            = $_POST['AmountClaimed'][$r];
+            $FolioItem = [
+                'FolioItemID' =>$this->guidv4(),
+                'FolioID' =>$FolioID,
+                'ItemCode'        => $ItemCode,
+                'ItemQuantity'    => $ItemQuantity,
+                'UnitPrice'       => $UnitPrice,
+                'AmountClaimed'   => $AmountClaimed,
+                'ApprovalRefNo'   =>$ApprovalRefNo,
+                'CreatedBy'       =>$CreatedBy,
+                'DateCreated'     =>$DateCreated
+            ];
+            $FolioItems[] =$FolioItem;
+        }
 
         $dataObject= [
             'FolioID' =>$FolioID,
@@ -2354,7 +2358,6 @@ class Finance extends MX_Controller {
             $this->session->set_flashdata('error', $response);
             redirect($_SERVER['HTTP_REFERER']);
         }
-        
        
     }
     function admit()
@@ -2559,11 +2562,12 @@ class Finance extends MX_Controller {
             curl_close($ch);
             redirect($_SERVER['HTTP_REFERER']);
         }
-        else {
-
-            $this->session->set_flashdata('success', 'Sucess');
+        else {  
+            // $claim_reconciliation = json_decode($response, );
+            $data = array('data'=>json_decode($response));
+            // $this->session->set_flashdata('success', 'Sucess');
             $this->load->view('home/dashboard'); // just the header file
-            $this->load->view('claim_consiliation', $response);
+            $this->load->view('claim_consiliation', $data);
             $this->load->view('home/footer'); // just the header file 
         }
     }
@@ -2601,10 +2605,10 @@ class Finance extends MX_Controller {
             redirect($_SERVER['HTTP_REFERER']);
         }
         else {
-            $data = array('data'=>$response);
-            $this->session->set_flashdata('success', 'Sucess');
+            $amountClaimed = array('data'=>json_decode($response));
+            // $this->session->set_flashdata('success', 'Sucess');
             $this->load->view('home/dashboard'); // just the header file
-            $this->load->view('claim_amount', $data);
+            $this->load->view('claim_amount', $amountClaimed);
             $this->load->view('home/footer'); // just the header file 
         }
     }

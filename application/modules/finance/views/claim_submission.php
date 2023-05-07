@@ -60,7 +60,7 @@
                 <!-- Folio Details start -->
                     <div class="not_found">
                     </div>
-                    <form method="POST" action="finance/claimSubmission" id ="sendReferal" enctype="multipart/form-data">
+                    <form method="POST" action="finance/claimSubmission" id ="claimSubmission" enctype="multipart/form-data">
                         <div class="form-row col-md-12">
                         <div class="form-group">
                             <label for="authorization">Authorization Number</label>
@@ -127,10 +127,13 @@
                             <div class="form-group col-md-4">
                                 <label for="PatientFile">Patient File</label>
                                 <input type="file" required  name="PatientFile" value="" class="form-control" id="PatientFile" placeholder="">
+                                <span class="text-danger PatientFile"></span>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="ClaimFile">Claim File</label>
                                 <input type="file" required  name="ClaimFile" value="" class="form-control" id="ClaimFile" placeholder="">
+                                <span class="text-danger ClaimFile"></span>
+
                             </div>
 
                         </div>
@@ -150,11 +153,11 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="DateAdmitted">Date Admitted</label>
-                                <input type="date" required  name="DateAdmitted" value="" class="form-control" id="DateAdmitted" placeholder="">
+                                <input type="date" name="DateAdmitted" value="" class="form-control" id="DateAdmitted" placeholder="">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="DateDischarged">Date Discharged</label>
-                                <input type="date" required  name="DateDischarged" value="" class="form-control" id="DateDischarged" placeholder="">
+                                <input type="date"  name="DateDischarged" value="" class="form-control" id="DateDischarged" placeholder="">
                             </div>
                            
                         </div>
@@ -178,7 +181,17 @@
                         <div class="form-row">
                         <div class="form-group col-md-6">
                                 <label for="DiseaseCode">Diagnosis/Desease code</label>
-                                <input type="text" required   name="DiseaseCode" value="" class="form-control" id="DiseaseCode" placeholder="">
+                                <table id="diseasecodetable" class="table table-bordered table-hover ">
+                                <thead class ="bg-info">
+                                <tr >
+                                    <th scope="col">Disease Code</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col"><button id="adddiseasecode">+</button></th>                            
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                             </div> 
                             <div class="form-group col-md-6">
                                 <label for="ItemCode">Items</label>
@@ -295,6 +308,24 @@
             });
         }
     }); 
+    adddiseasecode
+    $(document).on("click", "#adddiseasecode", function(event){
+        event.preventDefault();
+        
+        var data =" <tr>"+
+                    "<td><input class ='text-center form-control'  type ='text' id ='UnitPrice' name ='DiseaseCode[]'></td>"+
+                                    "<td>"+
+                                        "<select name='Status[]' class='form-control' id='Status'>"+
+                                            "<option selected disabled>select.....</option>"+
+                                            "<option value ='Provisional'>Preliminary diagnosis</option>"+
+                                            "<option value='Final'>Confirmed diagnosis</option>"+
+                                        "</select> "+
+                                   "</td>"+
+                                    "<td  class = 'text-center' title ='delete' id='remove'><i  class='fa fa-minus' aria-hidden='true'></i></td>"+
+                                "</tr>";
+        $("#diseasecodetable").append(data); 
+
+    });
     
     $(document).on("click", ".select_product", function() {
         var itemId = $(this).attr("id");
@@ -327,5 +358,53 @@ $(document).on("change", "#ItemQuantity", function() {
     // calculteTotalAmount();
     
 });
+
+
+$(document).on("change", "#PatientTypeCode", function() {
+    var PatientTypeCode = $(this).val();
+    // var a = row.children().children('#UnitPrice').val();
+    // var b = row.children().children('#ItemQuantity').val();
+    // var sub_total = a*b;
+    // row.children().children('#AmountClaimed').val(sub_total);
+    // calculteTotalAmount();
+    if (PatientTypeCode =='OUT') {
+        $('#DateAdmitted').attr('disabled', 'disabled');
+        $('#DateDischarged').attr('disabled', 'disabled');
+    }else{
+        $('#DateAdmitted').removeAttr('disabled');
+        $('#DateDischarged').removeAttr('disabled');
+    }
+   
+    
+});
+
+$(document).ready(function() {
+  $('#claimSubmission').submit(function(e) {
+    var fileInput1 = $('#PatientFile');
+    var fileInput2 = $('#ClaimFile');
+
+    
+    var filePath1 = fileInput1.val();
+    var filePath2 = fileInput2.val();
+
+    var extension1 = filePath1.substring(filePath1.lastIndexOf('.') + 1).toLowerCase();
+    var extension2 = filePath2.substring(filePath2.lastIndexOf('.') + 1).toLowerCase();
+
+
+    if (extension1 !== 'pdf') {
+      e.preventDefault();
+      $('.PatientFile').text('Please upload a PDF file.');
+      return false;
+    }
+    if (extension2 !== 'pdf') {
+      e.preventDefault();
+      $('.ClaimFile').text('Please upload a PDF file.');
+      return false;
+     
+    }  
+    return true;
+  });
+});
+
 </script>
 

@@ -43,41 +43,40 @@
                     </div>
                 </div>
                 </form>
-                <?php if(!empty($data)){
-                    echo json_encode($data, true);
+                <?php if(!empty($amountClaimed)){
                     ?>
                     <table id="nhif_referals" style="border-bottom:1px solid black;" class="table table-bordered table-hover ">
                     <thead  class ="bg-info">
                         <tr>
-                            <th scope="col" >No.</th>
-                            <th scope="col" >Full Name</th>
-                            <th scope="col">Card Number</th>
-                            <th scope="col">Referring Facility</th>
-                            <th scope="col">Authorization Number</th>
-                            <th scope="col">Referal Number</th>
-                            <th scope="col">Referring Date</th>
-                            <th scope="col">Physcian Name</th>
+                            <th scope="col" >FacilityCode</th>
+                            <th scope="col" >ClaimYear</th>
+                            <th scope="col">ClaimMonth</th>
+                            <th scope="col">Folios</th>
+                            <th scope="col">AmountClaimed</th>
 
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php if (!empty($referals)) {
-                            $no= 1;
-                            foreach ($referals as $item) {
+                    <tbody><?php
+                            $sum= 0;
+                            foreach ($amountClaimed as $item) {
                                     echo
-                                    '<tr id="'.$item->id.'" class="change_cursor">
-                                        <td>'.$no.'</td>
-                                        <td>'.$item->PatientFullName.'</td>
-                                        <td>'.$item->CardNo.'</td>
-                                        <td>'.$item->name.' ('.$item->code.') ('.$item->class.') /<strong>'.strtoupper($item->region).'</td>
-                                        <td>'.$item->AuthorizationNo.'</td>
-                                        <td>'.$item->ReferralNo.'</td>
-                                        <td>'.$item->DateCreated.'</td>
-                                        <td>'.$item->PhysicianName.'</td>
-
+                                    '<tr class="change_cursor">
+                                        <td>'.$item->FacilityCode.'</td>
+                                        <td>'.$item->ClaimYear.'</td>
+                                        <td>'.$item->ClaimMonth.'</td>
+                                        <td>'.$item->Folios.'</td>
+                                        <td>'.$item->AmountClaimed.'</td>
                                     </tr>';  
-                                    $no++;                           
+                                    $no+=$item->AmountClaimed;                           
                                     }
+                                    echo
+                                    '<tr class="change_cursor">
+                                        <td>Total</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>'.$sum.'</td>
+                                    </tr>';  
                                    
                         }else{
                             echo
@@ -88,7 +87,6 @@
                         ?>
                     </tbody>
                 </table>
-                <?php }?>
            </div>
         </section>
         <!-- page end-->

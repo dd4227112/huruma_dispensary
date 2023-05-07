@@ -43,39 +43,60 @@
                     </div>
                 </div>
                 </form>
-                <?php if(!empty($data)){?>
-                    <table id="nhif_referals" style="border-bottom:1px solid black;" class="table table-bordered table-hover ">
+                <?php if(!empty($data)){
+                    ?>
+                    <table id="nhif_referals" style="border-bottom:1px solid black;padding-top:25px;" class="table table-bordered table-hover ">
                     <thead  class ="bg-info">
                         <tr>
                             <th scope="col" >No.</th>
-                            <th scope="col" >Full Name</th>
-                            <th scope="col">Card Number</th>
-                            <th scope="col">Referring Facility</th>
-                            <th scope="col">Authorization Number</th>
-                            <th scope="col">Referal Number</th>
-                            <th scope="col">Referring Date</th>
-                            <th scope="col">Physcian Name</th>
+                            <th scope="col" >SubmissionNo</th>
+                            <th scope="col">DateSubmitted</th>
+                            <th scope="col">ClaimYear</th>
+                            <th scope="col">ClaimMonth</th>                           
+                            <th scope="col">SubmittedBy</th>
+                            <th scope="col">CardNo</th>
+                            <th scope="col">AuthorizationNo</th>
+                            <th scope="col">AmountClaimed</th>
+                            <th scope="col">Remarks</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($referals)) {
+                        <?php
                             $no= 1;
-                            foreach ($referals as $item) {
+                            $sum =0;
+                            foreach ($data as $item) {
                                     echo
-                                    '<tr id="'.$item->id.'" class="change_cursor">
+                                    '<tr>
                                         <td>'.$no.'</td>
-                                        <td>'.$item->PatientFullName.'</td>
+                                        <td>'.$item->SubmissionNo.'</td>
+                                        <td>'.$item->DateSubmitted.'</td>
+                                        <td>'.$item->ClaimYear.'</td>
+                                        <td>'.$item->ClaimMonth.'</td>
+                                        <td>'.$item->SubmittedBy.'</td>
                                         <td>'.$item->CardNo.'</td>
-                                        <td>'.$item->name.' ('.$item->code.') ('.$item->class.') /<strong>'.strtoupper($item->region).'</td>
                                         <td>'.$item->AuthorizationNo.'</td>
-                                        <td>'.$item->ReferralNo.'</td>
-                                        <td>'.$item->DateCreated.'</td>
-                                        <td>'.$item->PhysicianName.'</td>
+                                        <td  style="text-align:right">'.number_format($item->AmountClaimed,1).'</td>
+                                        <td>'.$item->Remarks.'</td>
 
                                     </tr>';  
-                                    $no++;                           
+                                    $no++; 
+                                    $sum+= $item->AmountClaimed;                         
                                     }
+                                    echo
+                                    '<tr>
+                                        <th style ="">Total</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th style="text-align:right">'.number_format($sum,1).'</th>
+                                        <th></th>
+
+                                    </tr>'; 
                                    
                         }else{
                             echo
@@ -86,7 +107,6 @@
                         ?>
                     </tbody>
                 </table>
-                <?php }?>
            </div>
         </section>
         <!-- page end-->
@@ -96,4 +116,10 @@
 <!--footer start-->
 
 <script src="common/js/codearistos.min.js"></script>
+<script>
+   $(document).ready(function () {
+    $('#nhif_referals').DataTable();
+   
+    });
+</script>
 
