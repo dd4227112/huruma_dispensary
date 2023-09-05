@@ -479,7 +479,6 @@ class Settings extends MX_Controller {
         $this->load->view('settings/verify');
         $this->load->view('home/footer');
         
-
     }
     public function sync(){
        

@@ -7,7 +7,7 @@ function define_my_constants()
     $user = 'root';
     $db_name = 'huduma';
     
-    $db_password = '';
+    $db_password = 'mwesiGEMWE1';
     $connection = mysqli_connect($host, $user, $db_password, $db_name)or die('ConnectError '.mysqli_error($connection));
 
     $nhif_config = mysqli_query($connection, 'SELECT * FROM nhif_setup');
