@@ -1,5 +1,5 @@
 <?php
-
+require FCPATH. '/vendor/autoload.php';
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -2618,7 +2618,62 @@ class Finance extends MX_Controller {
         $this->load->view('admittedPatient', $data);
         $this->load->view('home/footer'); // just the header file  
     }
+public function print(){
+    $mpdf = new \Mpdf\Mpdf();
+    // $data['patients'] = $this->db->get('patient')->result();
+    $data['patients'] = $this->db->query('SELECT * FROM patient LIMIT 25')->result();
+    $data['settings'] = $this->settings_model->getSettings();
+   
+//    echo $html;
+// $data['admissions'] = $this->finance_model->admittedPatient();
+// $output =$this->load->view('home/dashboard', true); // just the header file
+// $output.=$this->load->view('admittedPatient', $data, true);
+// $output.=$this->load->view('home/footer', true); // just the header file  
+$output=$this->load->view('all_patient', $data, true); // just the header file 
+   
+$filename = 'example.pdf';
 
+// Use the Output method with the filename argument
+// echo $output;
+// exit;
+
+
+
+
+
+$html = '<h1>Your PDF Content Goes Here</h1>';
+
+// Define the header and footer templates
+// $header = '
+//     <table width="100%">
+//         <tr>
+//             <td align="left">{DATE j-m-Y}</td>
+//             <td align="center">{PAGENO}/{nbpg}</td>
+//             <td align="right">Your Custom Header Content</td>
+//         </tr>
+//     </table>
+// ';
+
+$footer = '
+<p align="right"><i>
+page {PAGENO} of {nbpg}</i>
+</p>';
+// echo $output;
+// exit;
+
+// Set the header and footer content
+// $mpdf->SetHTMLHeader($header);
+$mpdf->SetHTMLFooter($footer);
+$mpdf->WriteHTML($output);
+$mpdf->Output($filename, 'D'); // 
+}
+
+public function searchPatient(){
+    $search =$this->input->get('search');
+    // $data = $this->db->where("(name LIKE '%" . $search . "%')")->get('patient')->result();
+    $data = $this->db->query("SELECT * FROM patient WHERE  name like '%".$search."%' ")->result();
+    echo json_encode($data);
+}
 
 }
 

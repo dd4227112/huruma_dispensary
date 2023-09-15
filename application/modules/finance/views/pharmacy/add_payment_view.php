@@ -38,6 +38,9 @@
                                 font-weight: 600;
                                 box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
                             }
+                            .pselect{
+                                cursor: arrow;
+                            }
                         </style>
 
                         <form role="form" class="clearfix pos form1"  id="editPaymentForm" action="finance/pharmacy/addPayment" method="post" enctype="multipart/form-data">
@@ -52,6 +55,33 @@
                                         </div>                                              
                                     </div>                                           
                                 <?php } ?>
+                                <div class="row" style="margin-left: 14px;" >
+                                    <div class="col-md-6 payment_label row"> 
+                                        <div id="patient_div">
+                                            <label for="exampleInputEmail1"> SELECT PATIENT</label>
+                                            <select class="form-control m-bot15 js-example-basic-single pos_select" id="select_patient" name="patient" value=''> 
+                                                    <option value=""><?php echo lang('select'); ?></option>
+                                                    <option value="customer_name" style="color: #41cac0 !important;">Enter customer name</option>
+                                                    <?php foreach ($patients as $patient) { ?>
+                                                        <option value="<?php echo $patient->name; ?>" <?php
+                                                        if (!empty($payment->patient)) {
+                                                            if ($payment->patient == $patient->name) {
+                                                                echo 'selected';
+                                                            }
+                                                        }
+                                                        ?> ><?php echo $patient->name; ?> </option>
+                                                            <?php } ?>
+                                                </select>
+                                    </div>
+                                        <div class=" payment_label" id="customer_div">
+                                            <label for="customer"> ENTER CUSTOMER NAME</label>
+                                            <input type="text" class="form-control " name="customer_name" value="" id="customer">
+                                            <p class="pselect text-primary">Enter customer name or <b>click here </b> to select patient name</p>
+                                            <!-- <button class="btn btn-info btn-sm">select patient</button> -->
+                                        </div>
+
+                                    </div>
+                    
                                 <div class="col-md-8 payment">
                                     <div class="form-group last">
                                         <div class="col-md-6 payment_label row"> 
@@ -313,6 +343,48 @@
 
 <script>
     $(document).ready(function () {
+        $('#customer_div').hide();
+        $('#select_patient').change(function () {
+            var selected_patient = $(this).val();
+            if(selected_patient=='customer_name'){
+        $('#customer_div').show();
+        $('#patient_div').hide();
+
+            }else{
+        $('#customer_div').hide();
+
+            }
+        });
+        $('.pselect').click(function(){
+            $('#customer_div').hide();
+            $('#patient_div').show();
+        });
+
+        $('#search_patient').keyup(function(){
+var text = $(this).val();
+if(text.length >=2){
+    $.ajax({
+            url: 'finance/searchPatient?search=' + text,
+            method: 'GET',
+            data: '',
+            dataType: 'json',
+        }).success(function (response) {
+            var html ='';
+            for (let i = 0; i < response.length; i++) {
+                const element = response[i];
+                html+="<option value='"+response[i].name+"'>"+response[i].name+"</option>";
+                $('#select_patient').html(html);
+            }
+            $('#select_patient').show();
+           
+            
+           
+
+        });
+}
+
+
+        });
         $('.multi-select').change(function () {
             var tot = 0;
             $(".ms-selected").click(function () {

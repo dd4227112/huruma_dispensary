@@ -9,6 +9,7 @@ class Pharmacy extends MX_Controller {
         parent::__construct();
         $this->load->model('pharmacy_model');
         $this->load->model('medicine/medicine_model');
+        $this->load->model('patient/patient_model');
         if (!$this->ion_auth->in_group(array('admin', 'Accountant', 'Pharmacist'))) {
             redirect('home/permission');
         }
@@ -73,6 +74,7 @@ class Pharmacy extends MX_Controller {
         $data['discount_type'] = $this->pharmacy_model->getDiscountType();
         $data['settings'] = $this->settings_model->getSettings();
         $data['medicines'] = $this->medicine_model->getMedicine();
+        $data['patients'] = $this->patient_model->getPatient();
         $this->load->view('home/dashboard', $data); // just the header file
         $this->load->view('pharmacy/add_payment_view', $data);
         $this->load->view('home/footer'); // just the header file
